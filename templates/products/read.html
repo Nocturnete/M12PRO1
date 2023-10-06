@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}"> -->
+    <!-- <link rel="stylesheet" href="{{url_for('static',filename='read.css')}}"> -->
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/read.css">
+    <title>Detalles del Producto</title>
+</head>
+
+<body>
+    <!-- AÑADIR MENU -->
+    <header>
+    
+    </header>
+    
+    <!-- BODY -->
+    <button><a href="/products/list">Volver</a></button>
+
+    <h1>Producto</h1>
+
+    <table>
+        <tr>
+            <th>ID: </th>
+            <td>{{ dato['id'] }}</td>
+        </tr>
+        <tr>
+            <th>Nombre: </th>
+            <td>{{ dato['title'] }}</td>
+        </tr>
+        <tr>
+            <th>Descripción: </th>
+            <td>{{ dato['description'] }}</td>
+        </tr>
+        <tr>
+            <th>Imagen: </th>
+            <td><img src="{{ dato['photo'] }}"></td>
+        </tr>
+        <tr>
+            <th>Precio: </th>
+            <td>${{ dato['price'] }}</td>
+        </tr>
+        <tr>
+            <th>Categoría ID: </th>
+            <td>{{ dato['category_id'] }}</td>
+        </tr>
+        <tr>
+            <th>Seller ID: </th>
+            <td>{{ dato['seller_id'] }}</td>
+        </tr>
+        <tr>
+            <th>Creado: </th>
+            <td>{{ dato['created'] }}</td>
+        </tr>
+        <tr>
+            <th>Ultima actualización: </th>
+            <td>{{ dato['updated'] }}</td>
+        </tr>
+    </table>
+
+</body>
+</html>

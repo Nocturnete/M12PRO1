@@ -1,2 +1,2 @@
-# Gerard Diaz Calafellç
+# Gerard Diaz Calafell
 # Documentació projecte

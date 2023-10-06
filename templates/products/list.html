@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}"> -->
+    <!-- <link rel="stylesheet" href="{{url_for('static',filename='list.css')}}"> -->
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <link rel="stylesheet" href="../../static/css/list.css">
+    <title> Lista Productos </title>
+</head>
+
+<body>
+    <!-- AÑADIR MENU -->
+    <header>
+        
+    </header>
+    <!-- MENSAJES -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    
+    <!-- CONTENIDO -->
+    <main>
+        <table>
+
+            <h1> Lista Productos </h1>
+            
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Imagen</th>
+                    <th>Precio</th>
+                    <th>Categoría</th>
+                    <th>Seller_id</th>
+                    <th>Creado</th>
+                    <th>Ultima actualización</th>
+                    <th colspan="3">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dato in producto %}
+                <tr>
+                    <td>{{dato['id']}}</td>
+                    <td>{{dato['title']}}</td>
+                    <td>{{dato['description']}}</td>
+                    <td>{{dato['photo']}}</td>
+                    <td>{{dato['price']}}</td>
+                    <td>{{dato['category_id']}}</td>
+                    <td>{{dato['seller_id']}}</td>
+                    <td>{{dato['created']}}</td>
+                    <td>{{dato['updated']}}</td>
+                    <td><a href="/products/read/{{dato['id']}}">Leer</a></td>
+                    <td><a href="/products/update/{{dato['id']}}">Editar</a></td>
+                    <td><a href="/products/delete/{{dato['id']}}">Eliminar</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        <button><a href="/products/create">Añadir</a></button>
+    
+    </main>
+</body>
+</html>
