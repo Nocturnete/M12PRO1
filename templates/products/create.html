@@ -31,7 +31,7 @@
     
     <h2>Añadir Producto</h2>
 
-    <form action="/products/create" enctype=multipart/form-data method="POST" >
+    <form action="/products/create" enctype="multipart/form-data" method="POST" >
         {% block contenido %} 
         <input type="text" name="nombre" placeholder="Nombre"/>
         <textarea type="text" name="descripcion" placeholder="Descripción"></textarea>
@@ -39,7 +39,7 @@
         <input name="precio" type="number" placeholder="Precio" />
         <select name="categoria" required>
             <option value="">Escoge una categoría</option>
-            {% for valor in categoria %}
+            {% for valor in categories %}
             <option value="{{valor['id']}}">{{valor['name']}}</option>
             {% endfor %}
         </select>        

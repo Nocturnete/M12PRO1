@@ -22,23 +22,23 @@
 
     <h1>Modificar Producto</h1>
 
-    <form method="POST">
+    <form action="/products/update/{{products.id}}" enctype="multipart/form-data" method="POST">
         <label for="nombre">Nombre: </label>
-        <input type="text" id="nombre" name="nombre" value="{{ dato['title'] }}"/>
+        <input type="text" id="nombre" name="nombre" value="{{products.title}}"/>
 
         <label for="descripcion">Descripcion: </label>
-        <textarea id="descripcion" name="descripcion" required>{{ dato['description'] }}</textarea>
+        <textarea id="descripcion" name="descripcion" required>{{products.description}}</textarea>
 
         <label for="imagen">Imagen: </label>
-        <input type="file" id="imagen" name="imagen" value="{{ dato['photo'] }}"/>
+        <input type="file" id="imagen" name="imagen" value="{{products.photo}}"/>
 
         <label for="precio">Precio: </label>
-        <input type="number" id="precio" name="precio" value="{{ dato['price'] }}"/>
+        <input type="number" id="precio" name="precio" value="{{products.price}}"/>
 
         <label for="categoria">Categoria:</label>
         <select id="categoria" name="categoria" required>
-            {% for valor in categoria %}
-            <option value="{{ valor['id'] }}" {% if valor['id'] == dato['category_id'] %}selected{% endif %}>{{ valor['name'] }}</option>
+            {% for categoria in categories %}
+            <option value="{{categoria['id']}}" {% if categoria['id'] == products.category_id %}selected{% endif %}>{{categoria['name']}}</option>
             {% endfor %}
         </select>
 

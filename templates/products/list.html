@@ -48,20 +48,20 @@
                 </tr>
             </thead>
             <tbody>
-                {% for dato in producto %}
+                {% for products in products_list %}
                 <tr>
-                    <td>{{dato['id']}}</td>
-                    <td>{{dato['title']}}</td>
-                    <td>{{dato['description']}}</td>
-                    <td>{{dato['photo']}}</td>
-                    <td>{{dato['price']}}</td>
-                    <td>{{dato['category_id']}}</td>
-                    <td>{{dato['seller_id']}}</td>
-                    <td>{{dato['created']}}</td>
-                    <td>{{dato['updated']}}</td>
-                    <td><a href="/products/read/{{dato['id']}}">Leer</a></td>
-                    <td><a href="/products/update/{{dato['id']}}">Editar</a></td>
-                    <td><a href="/products/delete/{{dato['id']}}">Eliminar</a></td>
+                    <td>{{products.id}}</td>
+                    <td>{{products.title}}</td>
+                    <td>{{products.description}}</td>
+                    <td>{{products.photo}}</td>
+                    <td>{{products.price}}</td>
+                    <td>{{products.category_id}}</td>
+                    <td>{{products.seller_id}}</td>
+                    <td>{{products.created}}</td>
+                    <td>{{products.updated}}</td>
+                    <td><a href="/products/read/{{products.id}}">Leer</a></td>
+                    <td><a href="/products/update/{{products.id}}">Editar</a></td>
+                    <td><a href="/products/delete/{{products.id}}">Eliminar</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

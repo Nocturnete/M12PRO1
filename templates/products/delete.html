@@ -23,41 +23,41 @@
     <h1>Eliminar Producto</h1>
 
     <table>
-        <tr>
+        <tr>            
             <th>ID: </th>
-            <td>{{ dato['id'] }}</td>
+            <td>{{products.id}}</td>
         </tr>
         <tr>
             <th>Nombre: </th>
-            <td>{{ dato['title'] }}</td>
+            <td>{{products.title}}</td>
         </tr>
         <tr>
             <th>Descripción: </th>
-            <td>{{ dato['description'] }}</td>
+            <td>{{products.description}}</td>
         </tr>
         <tr>
             <th>Imagen: </th>
-            <td><img src="{{ dato['photo'] }}" width="200"></td>
+            <td><img src="{{products.photo}}" width="200"></td>
         </tr>
         <tr>
             <th>Precio: </th>
-            <td>${{ dato['price'] }}</td>
+            <td>{{products.price}}€</td>
         </tr>
         <tr>
             <th>Categoría ID: </th>
-            <td>{{ dato['category_id'] }}</td>
+            <td>{{categoria.name}}</td>
         </tr>
         <tr>
             <th>Seller ID: </th>
-            <td>{{ dato['seller_id'] }}</td>
+            <td>{{products.seller_id}}</td>
         </tr>
         <tr>
             <th>Creado: </th>
-            <td>{{ dato['created'] }}</td>
+            <td>{{products.created}}</td>
         </tr>
         <tr>
             <th>Ultima actualización: </th>
-            <td>{{ dato['updated'] }}</td>
+            <td>{{products.updated}}</td>
         </tr>
     </table>
 
