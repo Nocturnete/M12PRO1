@@ -2,20 +2,18 @@
 
 ## Iniciar Sprint_1
 
-Crea l'entorn:
-    python3 -m venv .venv
-
-Activa'l:
-    source .venv/bin/activate
-
-Instal·la el requisits:
+## Instal·la el requisits:
     pip install -r requirements.txt
 
-Per a generar el fitxer de requiriments:
-    pip freeze > requirements.txt
+## Importar los .csv a la base de datos
+    Paso 1: 
+        Abre la aplicación DB Browser for SQLite 
+    Paso 2:
+        Abre la base de datos del proyecto: Open database > seleccionamos el database.db
+    Paso 3:
+        Importamos los .csv en este orden (user.csv, categorias.csv, products.csv): Archivo > Importar > Tabla del archivo CSV
+    Paso 4:
+        Finalmente clicamos en Write Database
 
-Per desactivar l'entorn:
-    deactivate
-
-Executa:
+## Executa:
     flask --debug run

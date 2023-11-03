@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
-from .models import Product, Category, User, Order, Confirmed_Order
+from flask import Blueprint, render_template, redirect, url_for, flash, current_app
+from .models import Product, Category, User
 from .forms import ProductForm, DeleteForm
 from . import db_manager as db
 from werkzeug.utils import secure_filename
@@ -98,13 +98,17 @@ def product_delete(product_id):
         return redirect(url_for('main_bp.product_list'))
     else:
         return render_template('products/delete.html', form = form, product = product)
-__uploads_folder = os.path.abspath(os.path.dirname(__file__)) + "/static/products/"
 
 def __manage_photo_file(photo_file):
     if photo_file.data:
         filename = photo_file.data.filename.lower()
-        if filename.endswith(('.png', '.jpg', '.jpeg')):
-            unique_filename = str(uuid.uuid4())+ "-" + secure_filename(filename)
-            photo_file.data.save(__uploads_folder + unique_filename)
+        ALLOWED_EXTENSIONS = set(os.getenv('ALLOWED_EXTENSIONS'))
+        if any(filename.endswith(ext) for ext in ALLOWED_EXTENSIONS):
+            unique_filename = str(uuid.uuid4()) + "-" + secure_filename(filename)
+            uploads_folder = current_app.config.get('UPLOAD_FOLDER')
+            file_path = os.path.join(uploads_folder, unique_filename)
+            photo_file.data.save(file_path)
             return unique_filename
     return None
+
+
