@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='css/tailwind.css') }}" rel="stylesheet">
+    <title>Wannapop</title>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="py-4 shadow-sm bg-white">
+        <div class="container flex items-center justify-between">
+            <!-- NOMBRE -->
+            <a href="/products/list">
+                <h2 class="w-39">Wannapop</h2>
+            </a>
+            <!-- BUSCADOR -->
+            <div class="w-full max-w-xl relative flex">
+                <span class="absolute left-4 top-3 text-lg text-gray-400">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" name="search" id="search" class="w-full border border-primary border-r-0 pl-12 py-3 pr-3 rounded-l-md focus:outline-none hidden md:flex" placeholder="search">
+                <button class="block py-3 pl-5 pr-5 text-center text-white bg-primary border border-primary rounded-r-md hover:bg-transparent hover:text-primary transition">Buscar</button>
+            </div>
+            <!-- CUENTA -->
+            <div class="flex items-center space-x-4">
+                <a href="../templates/login.html" class="text-center text-gray-700 hover:text-primary transition relative">
+                    <div class="text-xs leading-3">Cuenta</div>
+                </a>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="messages">
+                {% for category, message in messages %}
+                <p class="{{ category }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endwith %}
+    </header>
+
+     <!-- START CONTENT -->
+    {% block content %} 
+    {% endblock %}
+    <!-- END CONTENT -->
+
+</body>
+</html>

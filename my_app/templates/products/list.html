@@ -1,24 +1,55 @@
-{% extends '_template.html' %}
+{% extends 'layout.html' %}
 {% block content %}
 
-<h3>Productes</h3>
-<table>
-	<tr>
-		<th>ID</th>
-		<th>NOM</th>
-		<th>PREU</th>
-		<th>CATEGORIA</th>
-	</tr>
+    <!-- CATEGORIAS -->
+    <div class="container grid md:grid-cols-4 grid-cols-2 gap-6 pt-4 pb-16 items-start">
+        <div class="col-span-1 bg-white px-4 pb-6 shadow rounded overflow-hiddenb hidden md:block">
+            <div class="divide-y divide-gray-200 space-y-5">
+                <div>
+                    <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">Categorías</h3>
+                    <div class="space-y-2">
+                        {% for (product, category) in products_with_category %}
+                        <div class="flex items-center">
+                            <input type="checkbox" name="cat-1" id="cat-1" class="text-primary focus:ring-0 rounded-sm cursor-pointer">
+                            <label for="cat-1" class="text-gray-600 ml-3 cusror-pointer">{{ category.name }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="divide-y divide-gray-200 space-y-5">
+                <div>
+                    <a href="/products/create">Crear un nou producte</a>
+                </div>
+            </div>
+        </div>
 
-	{% for (product, category) in products_with_category %}
-	<tr>
-		<td><a href="/products/read/{{ product.id }}">{{ product.id }}</a></td>
-		<td><a href="/products/read/{{ product.id }}">{{ product.title }}</a></td>
-		<td><a href="/products/read/{{ product.id }}">{{ product.price }}</a></td>
-		<td><a href="/products/read/{{ product.id }}">{{ category.name }}</a></td>
-	</tr>
-	{% endfor %}
-</table>
-<a href="/products/create">Crear un nou producte</a>
+        <!-- PRODUCTOS -->
+        <div class="col-span-3">
+            <div class="grid md:grid-cols-3 grid-cols-2 gap-6">
+                {% for (product, category) in products_with_category %}
+
+                <div class="bg-white shadow rounded overflow-hidden group">
+                    <div class="relative">
+                        <!-- IMAGEN -->
+                        <img src="/static/products/{{ product.photo }}" alt="{{ product.photo }}" class="w-full">
+                    </div>
+                    <div class="pt-4 pb-3 px-4">
+                        <!-- NOMBRE -->
+                        <a href="/products/read/{{ product.id }}">
+                            <h4 class="uppercase font-medium text-xl mb-2 text-gray-800 hover:text-primary transition">{{ product.title }}</h4>
+                        </a>
+                        <!-- PRECIO -->
+                        <div class="flex items-baseline mb-1 space-x-2">
+                            <p class="text-xl text-primary font-semibold">{{ product.price }}€</p>
+                        </div>
+                    </div>
+                    <!-- BOTON -->
+                    <a href="/products/read/{{ product.id }}" class="block w-full py-1 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">Mostrar</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
