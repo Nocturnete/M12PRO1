@@ -17,5 +17,3 @@
 
 ## Executa:
     flask --debug run
-
-layouts
