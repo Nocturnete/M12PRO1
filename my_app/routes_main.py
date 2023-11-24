@@ -30,7 +30,7 @@ def init():
 @require_view_permission.require(http_exception=403)
 def product_list():
     products_with_category = db.session.query(Product, Category).join(Category).order_by(Product.id.asc()).all()
-    return render_template('products/admin.html', products_with_category = products_with_category)
+    return render_template('products/list.html', products_with_category = products_with_category)
 
 
 # ------------------------------------------------------------------
