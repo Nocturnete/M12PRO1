@@ -4,6 +4,7 @@ from . import login_manager
 from .models import User
 from .forms import LoginForm, RegisterForm
 from . import db_manager as db
+from .helper_role import notify_identity_changed
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
@@ -30,6 +31,7 @@ def login():
 
         if user and check_password_hash(user.password, plain_text_password):
             login_user(user)
+            notify_identity_changed()
             flash('Logged in successfully.', "success")
             return redirect(url_for("main_bp.init"))
 
@@ -75,6 +77,7 @@ def register():
     if form.validate_on_submit():
         name = form.name.data
         email = form.email.data
+        name = form.name.data
         plain_text_password = form.password.data
 
         # Verifica si el usuario ya existe
@@ -85,7 +88,7 @@ def register():
 
         # Crea un nuevo usuario y almacena el nombre, correo y la contraseña hasheada
         hashed_password = generate_password_hash(plain_text_password, method='scrypt:32768:8:1')
-        new_user = User(name=name, email=email, password=hashed_password, role="wanner")
+        new_user = User(name = name, email=email, password=hashed_password, role = "wanner")
         db.session.add(new_user)
         db.session.commit()
 

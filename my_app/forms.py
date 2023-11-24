@@ -26,7 +26,7 @@ class LoginForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
-    name = StringField('Nombre', validators=[DataRequired(), Length(min=2, max=50, message='El nombre debe tener entre 2 y 50 caracteres')])
+    name = StringField('Nombre', validators=[DataRequired(message='El nombre es obligatorio'), Length(min=2, max=50, message='El nombre debe tener entre 2 y 50 caracteres')])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
