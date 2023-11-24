@@ -7,11 +7,9 @@ from werkzeug.utils import secure_filename
 import uuid
 import os
 
-
 main_bp = Blueprint(
     "main_bp", __name__, template_folder="templates", static_folder="static"
 )
-
 
 # ------------------------------------------------------------------
 # |                          index.html                            |
@@ -119,5 +117,3 @@ def __manage_photo_file(photo_file):
             photo_file.data.save(file_path)
             return unique_filename
     return None
-
-
