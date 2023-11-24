@@ -73,6 +73,7 @@ def register():
     form = RegisterForm()
 
     if form.validate_on_submit():
+        name = form.name.data
         email = form.email.data
         plain_text_password = form.password.data
 
@@ -84,7 +85,7 @@ def register():
 
         # Crea un nuevo usuario y almacena el nombre, correo y la contraseña hasheada
         hashed_password = generate_password_hash(plain_text_password, method='scrypt:32768:8:1')
-        new_user = User(email=email, password=hashed_password)
+        new_user = User(name=name, email=email, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
 
