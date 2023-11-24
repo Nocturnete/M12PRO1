@@ -1,5 +1,7 @@
 from . import db_manager as db
 from sqlalchemy.sql import func
+from flask_login import UserMixin
+
 
 # Categorias
 class Category(db.Model):
@@ -9,14 +11,16 @@ class Category(db.Model):
     slug = db.Column(db.String, nullable=False)
 
 # Usuarios
-class User(db.Model):
+class User(UserMixin,db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True, nullable=False)
-    email = db.Column(db.String(255), unique=True, nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     created = db.Column(db.DateTime, server_default=func.now())
     updated = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
+    def get_id(self):
+        return self.email
 
 # Productos
 class Product(db.Model):

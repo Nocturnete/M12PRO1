@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, current_app
-from .models import Product, Category, User
-from .forms import ProductForm, DeleteForm
+from flask_login import current_user, login_required
+from .models import Product, Category
+from .forms import RegisterForm, ProductForm, DeleteForm, LoginForm, RegisterForm
 from . import db_manager as db
 from werkzeug.utils import secure_filename
 import uuid
@@ -17,13 +18,17 @@ main_bp = Blueprint(
 # ------------------------------------------------------------------
 @main_bp.route('/')
 def init():
-    return redirect(url_for('main_bp.product_list'))
+    if current_user.is_authenticated:
+        return redirect(url_for('main_bp.product_list'))
+    else:
+        return redirect(url_for("auth_bp.login"))
 
 
 # ------------------------------------------------------------------
 # |                           list.html                            |
 # ------------------------------------------------------------------
 @main_bp.route('/products/list')
+@login_required
 def product_list():
     products_with_category = db.session.query(Product, Category).join(Category).order_by(Product.id.asc()).all()
     return render_template('products/list.html', products_with_category = products_with_category)
@@ -33,6 +38,7 @@ def product_list():
 # |                          create.html                           |
 # ------------------------------------------------------------------
 @main_bp.route('/products/create', methods = ['POST', 'GET'])
+@login_required
 def product_create(): 
     categories = db.session.query(Category).order_by(Category.id.asc()).all()
     form = ProductForm()
@@ -57,6 +63,7 @@ def product_create():
 # |                           read.html                            |
 # ------------------------------------------------------------------
 @main_bp.route('/products/read/<int:product_id>')
+@login_required
 def product_read(product_id):
     (product, category) = db.session.query(Product, Category).join(Category).filter(Product.id == product_id).one()
     return render_template('products/read.html', product = product, category = category)
@@ -66,6 +73,7 @@ def product_read(product_id):
 # |                          update.html                           |
 # ------------------------------------------------------------------
 @main_bp.route('/products/update/<int:product_id>',methods = ['POST', 'GET'])
+@login_required
 def product_update(product_id):
     product = db.session.query(Product).filter(Product.id == product_id).one()
     categories = db.session.query(Category).order_by(Category.id.asc()).all()
@@ -88,6 +96,7 @@ def product_update(product_id):
 # |                          delete.html                           |
 # ------------------------------------------------------------------
 @main_bp.route('/products/delete/<int:product_id>',methods = ['GET', 'POST'])
+@login_required
 def product_delete(product_id):
     product = db.session.query(Product).filter(Product.id == product_id).one()
     form = DeleteForm()
