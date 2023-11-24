@@ -85,7 +85,7 @@ def register():
 
         # Crea un nuevo usuario y almacena el nombre, correo y la contraseña hasheada
         hashed_password = generate_password_hash(plain_text_password, method='scrypt:32768:8:1')
-        new_user = User(name=name, email=email, password=hashed_password)
+        new_user = User(name=name, email=email, password=hashed_password, role="wanner")
         db.session.add(new_user)
         db.session.commit()
 
@@ -93,4 +93,10 @@ def register():
         return redirect(url_for("auth_bp.login"))
 
     return render_template('register.html', form=form)
+
+
+@auth_bp.route("/profile")
+@login_required
+def profile():
+    return render_template("profile.html", user=current_user)
 
