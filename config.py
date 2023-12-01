@@ -1,27 +1,22 @@
-import os
-from os import environ
+from os import environ, path
 from dotenv import load_dotenv
 
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(basedir, '.env'))
+basedir = path.abspath(path.dirname(__file__))
+load_dotenv(path.join(basedir, '.env'))
 
 class Config:
+    """Base config."""
+    SECRET_KEY = environ.get('SECRET_KEY')
+    SESSION_COOKIE_NAME = environ.get('SESSION_COOKIE_NAME')
 
-    # Flask-Config
-    FLASK_APP = environ.get("FLASK_APP")
-    SECRET_KEY = environ.get("SECRET_KEY")
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + path.join(basedir, environ.get('SQLITE_FILE_RELATIVE_PATH'))
+    SQLALCHEMY_ECHO = environ.get('SQLALCHEMY_ECHO')
 
-    # Base de datos
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + basedir + "/" + environ.get('SQLALCHEMY_DATABASE_URI')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    MAIL_SUBJECT_PREFIX = environ.get('MAIL_SUBJECT_PREFIX')
+    MAIL_SENDER_NAME = environ.get('MAIL_SENDER_NAME')
+    MAIL_SENDER_ADDR = environ.get('MAIL_SENDER_ADDR')
+    MAIL_SENDER_PASSWORD = environ.get('MAIL_SENDER_PASSWORD')
+    MAIL_SMTP_SERVER = environ.get('MAIL_SMTP_SERVER')
+    MAIL_SMTP_PORT = int(environ.get('MAIL_SMTP_PORT'))
 
-    # Flask-Assets
-    STATIC_FOLDER = environ.get("STATIC_FOLDER")
-    TEMPLATES_FOLDER = environ.get("TEMPLATES_FOLDER")
-    UPLOAD_FOLDER = environ.get("UPLOAD_FOLDER")
-    ALLOWED_EXTENSIONS = environ.get("ALLOWED_EXTENSIONS")
-
-
-
-
+    EXTERNAL_URL = environ.get('EXTERNAL_URL')

@@ -1,80 +1,108 @@
 from flask import current_app
 from flask_login import current_user
-from flask_principal import identity_loaded, identity_changed, ActionNeed, Permission, Identity, AnonymousIdentity, RoleNeed
+from flask_principal import identity_loaded, identity_changed, ActionNeed, RoleNeed, Permission, Identity, AnonymousIdentity
 from enum import Enum
 
-# Custom roles and actions
 class Role(str, Enum):
-    admin = "admin"
+    wanner    = "wanner"
     moderator = "moderator"
-    wanner = "wanner"
+    admin     = "admin"
 
 class Action(str, Enum):
-    create = "create"
-    edit = "update"
-    delete = "delete"
-    view = "list and read" 
-    admin = "user admin"
-    moderate = "moderate products"
+    products_list     = "list products"
+    products_create   = "create products"
+    products_read     = "view products"
+    products_update   = "edit products"
+    products_delete   = "delete products"
+    # products_moderate = "moderate products"
+    categories_list     = "list categories"
+    categories_create   = "create categories"
+    categories_read     = "view categories"
+    categories_update   = "edit categories"
+    categories_delete   = "delete categories"
+    statuses_list     = "list statuses"
+    statuses_create   = "create statuses"
+    statuses_read     = "view statuses"
+    statuses_update   = "edit statuses"
+    statuses_delete   = "delete statuses"
 
-# Needs
-__admin_role_need = RoleNeed(Role.admin)
-__moderator_role_need = RoleNeed(Role.moderator)
-__wanner_role_need = RoleNeed(Role.wanner)
+# Wanners poden visualitzar i crear productes
+# Wanners poden editar i eliminar els seus productes
+# Moderators poden visualitzar i moderar productes
+# Admins poden fer de tot
+_permissions = {
+    Role.wanner: [
+        Action.products_list,
+        Action.products_create,
+        Action.products_read,
+        Action.products_update,
+        Action.products_delete
+    ],
+    Role.moderator: [
+        Action.products_list,
+        Action.products_read,
+        # Action.products_moderate
+        Action.products_delete # si s'implementa la moderació es treu aquesta línia
+    ],
+    Role.admin: [
+        Action.products_list,
+        Action.products_read,
+        Action.products_update,
+        Action.products_delete,
+        # Action.products_moderate,
+        # Action.categories_list,
+        # Action.categories_create,
+        # Action.categories_read,
+        # Action.categories_update,
+        # Action.categories_delete,
+        Action.statuses_list,
+        Action.statuses_create,
+        Action.statuses_read,
+        Action.statuses_update,
+        Action.statuses_delete,
+    ],
+}
 
-__create_action_need = ActionNeed(Action.create)
-__edit_action_need = ActionNeed(Action.edit)
-__delete_action_need = ActionNeed(Action.delete)
-__view_action_need = ActionNeed(Action.view)
-__admin_action_need = ActionNeed(Action.admin)
-# __moderate_action_need = ActionNeed(Action.moderate)
+def load_identity_permissions(identity):
+    # Afegir rol
+    role = identity.user.role
+    identity.provides.add(RoleNeed(role))
+    # Afegir permisos
+    if (_permissions[role]):
+        for action in _permissions[role]:
+            identity.provides.add(ActionNeed(action))
 
-# Permissions
-require_admin_role = Permission(__admin_role_need)
-require_moderator_role = Permission(__moderator_role_need)
-require_wanner_role = Permission(__wanner_role_need)
-
-require_create_permission = Permission(__create_action_need)
-require_edit_permission = Permission(__edit_action_need)
-require_delete_permission = Permission(__delete_action_need)
-require_view_permission = Permission(__view_action_need)
-require_admin_permission = Permission(__admin_action_need)
-# require_moderate_permission = Permission(__moderate_action_need)
+###########################
+# Mètodes Flask-Principal #
+###########################
 
 @identity_loaded.connect
 def on_identity_loaded(sender, identity):
     identity.user = current_user
-    if hasattr(current_user, 'role'):
-        if current_user.role == Role.admin:
-            # Role needs
-            identity.provides.add(__admin_role_need)
-            # Action needs
-            identity.provides.add(__edit_action_need)
-            identity.provides.add(__delete_action_need)
-            identity.provides.add(__view_action_need)
-            identity.provides.add(__admin_action_need)
-        elif current_user.role == Role.moderator:
-            # Role needs
-            identity.provides.add(__moderator_role_need)
-            # Action needs
-            identity.provides.add(__view_action_need)
-            identity.provides.add(__delete_action_need)
-            # identity.provides.add(__moderate_action_need)
-        elif current_user.role == Role.wanner:
-            # Role needs
-            identity.provides.add(__wanner_role_need)
-            # Action needs
-            identity.provides.add(__view_action_need)
-            identity.provides.add(__create_action_need)
-            identity.provides.add(__edit_action_need)
-            identity.provides.add(__delete_action_need)
-        else:
-            current_app.logger.debug("Unkown role")
+    # current_user podria ser anonim!
+    if hasattr(identity.user, 'role'):
+        load_identity_permissions(identity)
 
 def notify_identity_changed():
+    # current_user podria ser anonim!
     if hasattr(current_user, 'email'):
         identity = Identity(current_user.email)
     else:
         identity = AnonymousIdentity()
-    
+        
     identity_changed.send(current_app._get_current_object(), identity = identity)
+
+##################
+# Routes helpers #
+##################
+
+# Usage example: 
+# @role_required(Role.admin)
+def role_required(*roles):
+    needs = [RoleNeed(role) for role in roles]
+    return Permission(*needs).require(http_exception=403)
+
+# Usage example: 
+# @perm_required(Action.products_create)
+def perm_required(action):
+    return Permission(ActionNeed(action)).require(http_exception=403)

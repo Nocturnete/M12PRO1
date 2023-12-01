@@ -1,4 +1,9 @@
-{% extends 'layout.html' %}
+{% extends 'layouts/_base.html' %}
+
+{% block title %}
+    Administracion
+{% endblock %}
+
 {% block content %}
 
     <div class="container mx-auto p-8">
@@ -9,13 +14,13 @@
                 <h2 class="text-xl text-gray-800 font-semibold mb-4">Panel de Administración</h2>
                 <ul class="space-y-2">
                     <li>
-                        <a href="#" class="text-red-500 hover:text-red-600 transition">Usuarios</a>
+                        <a href="/admin/users" class="text-red-500 hover:text-red-600 transition">Usuarios</a>
                     </li>
                     <li>
-                        <a href="#" class="text-red-500 hover:text-red-600 transition">Categorías</a>
+                        <a href="/categories/list" class="text-red-500 hover:text-red-600 transition">Categorías</a>
                     </li>
                     <li>
-                        <a href="#" class="text-red-500 hover:text-red-600 transition">Productos</a>
+                        <a href="/statuses/list" class="text-red-500 hover:text-red-600 transition">Estados</a>
                     </li>
                 </ul>
             </div>

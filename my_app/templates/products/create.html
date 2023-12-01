@@ -1,5 +1,6 @@
-{% extends 'layout.html' %}
-{% from "_formhelpers.html" import render_errors %}
+{% extends 'layouts/_base.html' %}
+{% from "partials/_formhelpers.html" import render_errors %}
+
 {% block content %}
 
    <div class="max-w-md mx-auto p-6 bg-white rounded-md shadow-md">
@@ -10,28 +11,33 @@
          {{ form.csrf_token }}
          <!--Nombre-->
          <div>
-            <label for="product_title" class="block text-sm font-medium text-gray-600">Nombre del Producto</label>
-            {{ form.title(class="mt-1 p-2 w-full border rounded-md") }}
+            {{ form.title.label(class="block text-sm font-medium text-gray-600")}}
+            {{ form.title(class_="form-control", class="mt-1 p-2 w-full border rounded-md")}}
          </div>
          <!--Descripción-->
          <div>
-            <label for="product_description" class="block text-sm font-medium text-gray-600">Descripción del Producto</label>
-            {{ form.description(class="mt-1 p-2 w-full border rounded-md") }}
+            {{ form.description.label(class="block text-sm font-medium text-gray-600")}}
+            {{ form.description(class_="form-control", class="mt-1 p-2 w-full border rounded-md")}}
          </div>
          <!--Foto-->
          <div>
-            <label for="product_photo" class="block text-sm font-medium text-gray-600">Foto del Producto</label>
-            {{ form.photo_file(class="mt-1 p-2 w-full border rounded-md") }}
+            {{ form.photo_file.label(class="block text-sm font-medium text-gray-600") }}
+            {{ form.photo_file(class_="form-control") }}
          </div>
          <!--Precio-->
          <div>
-            <label for="product_price" class="block text-sm font-medium text-gray-600">Precio del Producto</label>
-            {{ form.price(class="mt-1 p-2 w-full border rounded-md") }}
+            {{ form.price.label(class="block text-sm font-medium text-gray-600") }}
+            {{ form.price(class_="form-control", class="mt-1 p-2 w-full border rounded-md")}}
          </div>
          <!--Categoría-->
          <div>
-            <label for="product_category" class="block text-sm font-medium text-gray-600">Categoría del Producto</label>
-            {{ form.category_id(class="mt-1 p-2 w-full border rounded-md") }}
+            {{ form.category_id.label(class="block text-sm font-medium text-gray-600")}}
+            {{ form.category_id(class_="form-control", class="mt-1 p-2 w-full border rounded-md")}}
+         </div>
+         <!--Estado-->
+         <div>
+            {{ form.status_id.label(class="block text-sm font-medium text-gray-600") }}
+            {{ form.status_id(class_="form-control", class="mt-1 p-2 w-full border rounded-md")}}
          </div>
          <!--Botón-->
          <p>{{ form.submit(value="CREAR", class="w-full p-3 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition duration-300") }}</p>
