@@ -36,6 +36,7 @@ def create_app():
         # Registra comandes
         app.cli.add_command(commands.db_cli)
 
+
     app.logger.info("Aplicació iniciada")
 
     return app
