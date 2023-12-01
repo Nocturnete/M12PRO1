@@ -3,6 +3,8 @@ from flask_login import current_user, login_required, logout_user
 from .forms import ProfileForm, LoginForm, RegisterForm, ResendForm, ProductForm, CategoryForm, StatusForm, DeleteForm
 from . import db_manager as db, mail_manager as mail, logger
 import secrets
+from .models import BlockedUser
+
 
 
 main_bp = Blueprint("main_bp", __name__)
@@ -18,6 +20,7 @@ def init():
 @main_bp.route('/profile', methods=["GET", "POST"])
 @login_required
 def profile():
+    blocked_user = BlockedUser.query.filter_by(user_id=current_user.id).first()
     form = ProfileForm()
     if form.validate_on_submit():
         something_change = False
@@ -57,7 +60,7 @@ def profile():
         form.name.data = current_user.name
         form.email.data = current_user.email    
 
-        return render_template('profile.html', form = form)
+        return render_template('profile.html', form = form, blocked_user=blocked_user)
 
 @main_bp.app_errorhandler(403)
 def forbidden_access(e):

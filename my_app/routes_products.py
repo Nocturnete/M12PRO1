@@ -34,6 +34,10 @@ def product_list():
 @products_bp.route('/products/create', methods = ['POST', 'GET'])
 @perm_required(Action.products_create)
 def product_create(): 
+    if current_user.blocked_user:
+        flash('No puedes crear nuevos productos mientras estás bloqueado.', 'warning')
+        return redirect(url_for('products_bp.product_list'))
+    
     categories = db.session.query(Category).order_by(Category.id.asc()).all()
     statuses = db.session.query(Status).order_by(Status.id.asc()).all()
 

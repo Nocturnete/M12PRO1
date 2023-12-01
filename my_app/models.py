@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from . import db_manager as db
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -15,6 +16,7 @@ class User(UserMixin, db.Model):
     email_token = db.Column(db.String, nullable=True, server_default=None)
     created = db.Column(db.DateTime, server_default=func.now())
     updated = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
+    blocked_user = relationship('BlockedUser', back_populates='user', uselist=False)
 
     def get_id(self):
         return self.email
@@ -92,3 +94,10 @@ class Status(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     slug = db.Column(db.String, nullable=False)
+
+class BlockedUser(db.Model):
+    __tablename__ = "blocked_users"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True)
+    reason = db.Column(db.String)
+    user = relationship('User', back_populates='blocked_user')
