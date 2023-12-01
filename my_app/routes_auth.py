@@ -6,68 +6,59 @@ from .helper_role import notify_identity_changed, Role
 from .models import User
 import secrets
 
-# Blueprint
+
 auth_bp = Blueprint("auth_bp", __name__)
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
-    # Si ja està autenticat, sortim d'aquí
     if current_user.is_authenticated:
         return redirect(url_for("main_bp.init"))
 
     form = LoginForm()
-    if form.validate_on_submit(): # si s'ha enviat el formulari via POST i és correcte
+    if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
 
         user = load_user(email)
         if user and user.check_password(password):
-            # si no està verificat, no pot entrar
             if not user.verified:
                 flash("Revisa el teu email i verifica el teu compte", "error")
                 return redirect(url_for("auth_bp.login"))
             
-            # aquí és crea la cookie
             login_user(user)
-            # aquí s'actualitzen els rols que té l'usuari
             notify_identity_changed()
 
             return redirect(url_for("main_bp.init"))
 
-        # si arriba aquí, és que no s'ha autenticat correctament
-        flash("Error d'usuari i/o contrasenya", "error")
+        flash("Error del usuario o contraseña", "error")
+
         return redirect(url_for("auth_bp.login"))
     
     return render_template('login.html', form = form)
 
 @auth_bp.route("/register", methods=["GET", "POST"])
 def register():
-    # Si ja està autenticat, sortim d'aquí
     if current_user.is_authenticated:
         return redirect(url_for("main_bp.init"))
 
     form = RegisterForm()
-    if form.validate_on_submit(): # si s'ha enviat el formulari via POST i és correcte
+    if form.validate_on_submit():
         new_user = User()
        
-        # dades del formulari a l'objecte new_user
         form.populate_obj(new_user)
 
-        # els nous usuaris tenen role 'wanner'
         new_user.role = Role.wanner
 
-        # els nous usuaris han de verificar l'email
         new_user.verified = False
         new_user.email_token = secrets.token_urlsafe(20)
 
-        # insert!
         db.session.add(new_user)
         db.session.commit()
 
-        # envio l'email!
         mail_manager.send_register_email(new_user.name, new_user.email, new_user.email_token)
 
-        flash("Revisa el teu correu per verificar-lo", "success")
+        flash("Verifica el correo", "success")
+        
         return redirect(url_for("auth_bp.login"))
     
     return render_template('register.html', form = form)
@@ -77,16 +68,18 @@ def verify(name, token):
     user = db.session.query(User).filter(User.name == name).one_or_none()
     if user and user.email_token == token:
         user.verified = True
-        user.email_token = None # esborro el token perquè ja no serveix
+        user.email_token = None 
         db.session.commit()
-        flash("Compte verificat correctament", "success")
+
+        flash("Se ha verificado el correo", "success")
+
     else:
-        flash("Error de verificació", "error")
+        flash("Error de verificación", "error")
+
     return redirect(url_for("auth_bp.login"))
 
 @auth_bp.route("/resend", methods=["GET", "POST"])
 def resend():
-    # Si ja està autenticat, sortim d'aquí
     if current_user.is_authenticated:
         return redirect(url_for("main_bp.init"))
 
@@ -96,13 +89,16 @@ def resend():
         user = db.session.query(User).filter(User.email == email).one_or_none()
         if user:
             if user.verified:
-                flash("Aquest compte ja està verificat", "error")
+                flash("Esta cuenta ya esta verificada", "error")
+
             else:
                 mail_manager.send_register_email(user.name, user.email, user.email_token)
-                flash("Revisa el teu correu per verificar-lo", "success")
+                flash("Verifica el correo", "success")
         else:
-            flash("Aquest compte no existeix", "error")
+            flash("Esta cuenta no existe", "error")
+
         return redirect(url_for("auth_bp.login"))
+    
     else:
         return render_template('resend.html', form = form)
 
@@ -110,7 +106,9 @@ def resend():
 @login_required
 def logout():
     logout_user()
-    flash("T'has desconnectat correctament", "success")
+
+    flash("Te has desconectado", "success")
+
     return redirect(url_for("auth_bp.login"))
 
 @login_manager.user_loader
@@ -121,5 +119,7 @@ def load_user(email):
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    flash("Autentica't o registra't per accedir a aquesta pàgina", "error")
+
+    flash("Inicia sesión o registrate para acceder a esta pagina", "error")
+    
     return redirect(url_for("auth_bp.login"))

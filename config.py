@@ -19,4 +19,6 @@ class Config:
     MAIL_SMTP_SERVER = environ.get('MAIL_SMTP_SERVER')
     MAIL_SMTP_PORT = int(environ.get('MAIL_SMTP_PORT'))
 
+    CONTACT_ADDR = environ.get('CONTACT_ADDR')
+
     EXTERNAL_URL = environ.get('EXTERNAL_URL')

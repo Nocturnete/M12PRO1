@@ -1,11 +1,12 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import current_user, login_required, logout_user
-from .forms import ProfileForm
-from . import db_manager as db, mail_manager
+from .forms import ProfileForm, LoginForm, RegisterForm, ResendForm, ProductForm, CategoryForm, StatusForm, DeleteForm
+from . import db_manager as db, mail_manager as mail, logger
 import secrets
 
-# Blueprint
+
 main_bp = Blueprint("main_bp", __name__)
+
 
 @main_bp.route('/')
 def init():
@@ -42,16 +43,16 @@ def profile():
             flash("Cap canvi", "success")
         else:
             db.session.commit()
-
             if not current_user.verified:
-                mail_manager.send_register_email(current_user.name, current_user.email, current_user.email_token)
+                mail.send_register_email(current_user.name, current_user.email, current_user.email_token)
                 logout_user()
                 flash("Revisa el teu correu per verificar-lo", "success")
                 return redirect(url_for("auth_bp.login"))
 
-            flash("Perfil actualitzat correctament", "success")
+            flash("Perfil actualizado correctamente", "success")
             
         return redirect(url_for('main_bp.profile'))
+    
     else:
         form.name.data = current_user.name
         form.email.data = current_user.email    

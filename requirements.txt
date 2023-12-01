@@ -20,3 +20,5 @@ werkzeug==3.0.1
 wtforms==3.1.1
 zipp==3.17.0
 sqlalchemyseed==2.0.0
+packaging==23.2
+Flask-DebugToolbar @ https://github.com/pallets-eco/flask-debugtoolbar/archive/refs/heads/master.zip
