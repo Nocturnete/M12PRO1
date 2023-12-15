@@ -16,7 +16,8 @@ def admin_index():
 @role_required(Role.admin)
 def admin_users():
     users = db.session.query(User).all()
-    return render_template('admin/users_list.html', users=users)
+    blocked_users = db.session.query(BlockedUser).all()
+    return render_template('admin/users_list.html', users=users, blocked_users=blocked_users)
 
 @admin_bp.route('/admin/users/<int:user_id>/block', methods=['POST'])
 @role_required(Role.admin)
@@ -26,7 +27,7 @@ def block_user(user_id):
     db.session.add(blocked_user)
     db.session.commit()
     flash(f'Usuario {user.username} bloqueado con éxito.', 'success')
-    return redirect(url_for('admin.user_moderation_page'))
+    return redirect(url_for('admin.block_user'))
 
 @admin_bp.route('/admin/users/<int:user_id>/unblock', methods=['POST'])
 @role_required(Role.admin)
@@ -44,4 +45,4 @@ def unblock_user(user_id):
     else:
         flash(f'El usuario {user.username} no está bloqueado.', 'warning')
 
-    return redirect(url_for('admin.user_moderation_page'))
+    return redirect(url_for('admin.unblock_user'))
