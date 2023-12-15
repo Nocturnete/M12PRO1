@@ -1,0 +1,77 @@
+{% extends 'layouts/_base.html' %}
+{% from "partials/_formhelpers.html" import render_errors %}
+
+{% block content %}
+
+    <!-- MENU -->
+    <div class="container grid md:grid-cols-4 grid-cols-2 gap-6 pt-4 pb-16 items-start">
+        <div class="col-span-1 bg-white px-4 pb-6 shadow rounded overflow-hiddenb hidden md:block">
+            <div class="divide-y divide-gray-200 space-y-5">
+                <div class="space-y-3 items-center flex pt-4 justify-center items-center">
+                    {%if current_user.role != 'admin' and current_user.role != 'moderator' %}
+                    <a href="/products/create" class="relative hover:text-primary block font-medium capitalize transition">
+                        <span>Crear un producto</span>
+                    </a>
+                    {% endif %}
+                    {%if current_user.role == 'moderator' %}
+                    <a href="/products/banned/list" class="relative hover:text-primary block font-medium capitalize transition">
+                        <span>Productos baneados</span>
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="pt-4">
+                    <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">Categorías</h3>
+                    <div class="space-y-2">
+                        {% for (product, category) in products_with_category %}
+                            <div class="flex items-center">
+                                <input type="checkbox" name="category" id="cat-{{ category.id }}" class="category-checkbox text-primary focus:ring-0 rounded-sm cursor-pointer">
+                                <label for="cat-{{ category.id }}" class="text-gray-600 ml-3 cusror-pointer">{{ category.name }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCTOS -->
+        <div class="col-span-3">
+            <div class="grid lg:grid-cols-3 grid-cols-2 gap-6">
+                {% for (product, category) in products_with_category %}
+                {% if product.id not in products_banned or product.seller_id == current_user.id %}
+                <div class="bg-white shadow rounded overflow-hidden group">
+                    <div class="relative">
+                        <!-- IMAGEN -->
+                        <img src="/static/products/{{ product.photo }}" alt="{{ product.photo }}" class="w-full">
+                    </div>
+                    <div class="pt-4 pb-3 px-4">
+                        <!-- NOMBRE -->
+                        <a href="/products/read/{{ product.id }}">
+                            <h4 class="uppercase font-medium text-xl mb-2 text-gray-800 hover:text-primary transition">{{ product.title }}</h4>
+                        </a>
+                        <!-- PRECIO -->
+                        <div class="flex items-baseline mb-1 space-x-2">
+                            <p class="text-xl text-primary font-semibold">{{ product.price }}€</p>
+                        </div>
+                    </div>
+                    <!-- BOTON -->
+                    <a href="/products/read/{{ product.id }}" class="block w-full py-1 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">Mostrar</a>
+                    {% if current_user.role == 'moderator' and product.id not in products_banned %}
+                        <a href="/admin/products/{{ product.id }}/ban" class="block w-full py-1 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">Banear</a>
+                    {% endif %}
+
+                    {% if product.id in products_banned %}
+                    {% set reason = products_banned.get(product.id) %}
+                    <div class="bg-red-500 text-white p-2 text-center">
+                        Este producto ha sido bloqueado. Razón: {{ reason }}
+                    </div>
+                    {% endif %}
+
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        
+    </div>
+
+{% endblock %}

@@ -1,27 +1,54 @@
-from flask import Flask
+from flask import Flask, current_app
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-import os
+from flask_principal import Principal
+from flask_debugtoolbar import DebugToolbarExtension
+from .helper_mail import MailManager
+from werkzeug.local import LocalProxy
+from logging.handlers import RotatingFileHandler
+import logging
 
 db_manager = SQLAlchemy()
+login_manager = LoginManager()
+principal_manager = Principal()
+mail_manager = MailManager()
+toolbar = DebugToolbarExtension()
+logger = LocalProxy(lambda: current_app.logger)
+
 
 def create_app():
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = "Valor aleatori molt llarg i super secret"
 
-    # BASE DE DATOS
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + basedir + "/../database.db"
-    app.config["SQLALCHEMY_ECHO"] = True
-    
-    # CARPETA UPLOADS
-    app.config['UPLOAD_FOLDER'] = "my_app/uploads"
+    app.config.from_object('config.Config')
 
-    # Inicialitza SQLAlchemy
+    log_handler = RotatingFileHandler('app.log', maxBytes=10240, backupCount=3)
+    log_handler.setFormatter(logging.Formatter(
+    '%(asctime)s %(levelname)s: %(message)s '
+    '[in %(pathname)s:%(lineno)d]'
+    ))
+    log_handler.setLevel(logging.DEBUG)
+    app.logger.addHandler(log_handler)
+
+    login_manager.init_app(app)
     db_manager.init_app(app)
-
+    principal_manager.init_app(app)
+    mail_manager.init_app(app)
+    toolbar.init_app(app)
+    
     with app.app_context():
-        from . import routes_main
-        app.register_blueprint(routes_main.main_bp)
+        from . import commands, routes_main, routes_auth, routes_admin, routes_products, routes_category, routes_status
+        # from . import commands
 
-    app.logger.info("Aplicación iniciada")
+        app.register_blueprint(routes_main.main_bp)
+        app.register_blueprint(routes_auth.auth_bp)
+        app.register_blueprint(routes_admin.admin_bp)
+        app.register_blueprint(routes_products.products_bp)
+        app.register_blueprint(routes_category.category_bp)
+        app.register_blueprint(routes_status.status_bp)
+        
+        # Registra comandes
+        # app.cli.add_command(commands.db_cli)
+
+    app.logger.info("Aplicació iniciada")
+
     return app

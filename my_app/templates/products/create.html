@@ -1,0 +1,52 @@
+{% extends 'layouts/_base.html' %}
+{% from "partials/_formhelpers.html" import render_errors %}
+
+{% block content %}
+
+   <div class="mt-14 max-w-md mx-auto p-6 bg-gray-100 rounded-md shadow-lg">
+
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Crear Producto</h2>
+      
+      <form action="/products/create" method="POST" enctype="multipart/form-data" class="space-y-4">
+         {{ form.csrf_token }}
+         <!--Nombre-->
+         <div>
+            {{ form.title.label(class="block text-sm font-medium text-gray-600")}}
+            {{ form.title(class_="form-control", class="mt-1 p-2 w-full border rounded-md")}}
+         </div>
+         <!--Descripción-->
+         <div>
+            {{ form.description.label(class="block text-sm font-medium text-gray-600")}}
+            {{ form.description(class_="form-control", class="mt-1 p-2 w-full border rounded-md")}}
+         </div>
+         <!--Foto-->
+         <div>
+            {{ form.photo_file.label(class="block text-sm font-medium text-gray-600") }}
+            {{ form.photo_file(class_="form-control") }}
+         </div>
+         <!--Precio-->
+         <div>
+            {{ form.price.label(class="block text-sm font-medium text-gray-600") }}
+            {{ form.price(class_="form-control", class="mt-1 p-2 w-full border rounded-md")}}
+         </div>
+         <!--Categoría-->
+         <div>
+            {{ form.category_id.label(class="block text-sm font-medium text-gray-600")}}
+            {{ form.category_id(class_="form-control", class="mt-1 p-2 w-full border rounded-md")}}
+         </div>
+         <!--Estado-->
+         <div>
+            {{ form.status_id.label(class="block text-sm font-medium text-gray-600") }}
+            {{ form.status_id(class_="form-control", class="mt-1 p-2 w-full border rounded-md")}}
+         </div>
+         <!--Botón-->
+         <p>{{ form.submit(value="CREAR", class="w-full p-3 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition duration-300") }}</p>
+         {{ render_errors(form) }}
+
+      </form>
+      
+      <a href="/products/list" class="block text-sm mt-4"> << Volver a la lista de productos</a>
+
+   </div>
+
+{% endblock %}

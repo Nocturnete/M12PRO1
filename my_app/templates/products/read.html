@@ -1,0 +1,40 @@
+{% extends 'layouts/_base.html' %}
+
+{% block content %}
+    <!-- DETALLES PRODUCTO -->
+    <div class="container grid grid-cols-2 gap-6">
+        <!-- IMAGEN -->
+        <div>
+            <img src="/static/products/{{ product.photo }}" alt="{{ product.photo }}" class="w-full">
+        </div>
+        <!-- DETALLES PRODUCTO -->
+        <div>
+            <!-- NOMBRE -->
+            <h2 class="text-3xl font-medium uppercase mb-2">{{ product.title }}</h2>
+
+            <!-- CATEGORIA -->
+            <div class="space-y-2">
+                <p class="space-x-2">
+                    <span class="text-gray-800 font-semibold">Categoría: </span>
+                    <span class="text-gray-600">{{ category.name }}</span>
+                </p>
+            </div>
+
+            <!-- DESCRIPCION -->
+            <p class="mt-4 text-gray-600">{{ product.description }}</p>
+
+            <!-- PRECIO -->
+            <div class="flex items-baseline mb-1 space-x-2 font-roboto mt-4">
+                <p class="text-xl text-primary font-semibold">{{ product.price }}€</p>
+            </div>
+            <!-- BOTONES -->
+            <div class="mt-6 flex gap-3 border-b border-gray-200 pb-5 pt-5">
+                {% if current_user.id == product.seller_id %}
+                    <a href="/products/delete/{{ product.id }}" class="bg-primary border border-primary text-white px-8 py-2 font-medium rounded uppercase flex items-center gap-2 hover:bg-transparent hover:text-primary transition">Eliminar</a>
+                    <a href="/products/update/{{ product.id }}" class="border border-gray-300 text-gray-600 px-8 py-2 font-medium rounded uppercase flex items-center gap-2 hover:text-primary transition">Modificar</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'layouts/_base.html' %}
+
+{% block title %}
+    Administración
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mx-auto p-8">
+        <div class="grid grid-cols-3 gap-4">
+            <div class="col-span-1 bg-white p-4 shadow">
+                <h2 class="text-xl text-gray-800 font-semibold mb-4">Panel de Administración</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/admin/users" class="text-red-500 hover:text-red-600 transition">Usuarios</a>
+                    </li>
+                    <li>
+                        <a href="/categories/list" class="text-red-500 hover:text-red-600 transition">Categorías</a>
+                    </li>
+                    <li>
+                        <a href="/statuses/list" class="text-red-500 hover:text-red-600 transition">Estados</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'layouts/_base.html' %}
+
+{% block content %}
+
+<h2 class="text-5xl font-bold text-red-500 flex justify-center mt-4 mb-8">Gestión de Usuarios</h2>
+<div class="flex justify-center">
+    <div class="w-full lg:w-3/5">
+        <div class="relative overflow-x-auto border">
+            <table class="w-full text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-lg text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">ID</th>
+                        <th scope="col" class="px-6 py-3">Nombre</th>
+                        <th scope="col" class="px-6 py-3">Correo Electrónico</th>
+                        <th scope="col" class="px-6 py-3">Rol</th>
+                        <th scope="col" class="px-6 py-3">Acciones</th>
+                        <th scope="col" class="px-6 py-3">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ user.id }}</th>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ user.name }}</th>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ user.email }}</th>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ user.role }}</th>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {% if user.role not in ['admin', 'moderator'] %}
+
+                            {% if user.id in blocked_users|map(attribute='user_id') %}
+                            <a href="/admin/users/{{ user.id }}/unblock" class="text-green-500 hover:text-green-600 transition">Desbloquear</a>
+                            {% else %}
+                            <a href="/admin/users/{{ user.id }}/block" class="text-red-500 hover:text-red-600 transition">Bloquear</a>
+                            {% endif %}
+                            {% endif %}
+
+                        </th>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {% if user.id in blocked_users|map(attribute='user_id') %}
+                            Bloqueado
+                            {% else %}
+                            Desbloqueado
+                            {% endif %}
+                        </th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<a class="btn btn-outline-dark btn-xl" href="/admin">&#x3c;&#x3c; Tornar la pàgina d'administració</a>
+
+{% endblock %}

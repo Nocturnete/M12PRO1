@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='css/flash.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/tailwind.css') }}" rel="stylesheet">
+
+    <title>Wannapop</title>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="py-4 shadow-sm bg-white">
+        <div class="flex items-center justify-between">
+            <!-- NOMBRE -->
+            <a href="/products/list">
+                <h2 class="w-39 ml-6">Wannapop</h2>
+            </a>
+            <!-- BUSCADOR -->
+            <div class="w-full ml-6 mr-6 max-w-xl relative flex">
+                <input type="text" name="search" id="search" class="w-full border border-primary border-r-0 pl-5 py-3 rounded-l-md focus:outline-none  md:flex" placeholder="search">
+                <button class="block py-3 pl-5 pr-5 text-center text-white bg-primary border border-primary rounded-r-md hover:bg-transparent hover:text-primary transition">Buscar</button>
+            </div>
+            <!-- CUENTA -->
+            <div class="flex items-center space-x-4">
+                <a href="/profile" class="text-center text-gray-700 hover:text-primary transition relative mr-6">
+                    <div class="text-xs leading-3">{{ current_user.email }}</div>
+                </a>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flex mt-5 text-xl border rounded-lg" role="alert">
+                    {% for category, message in messages %}
+                    <div class=" 
+                        {% if category == 'success' %} text-green-800 bg-green-100 w-full m-0 p-5
+                        {% elif category == 'danger' %} text-red-800 bg-red-100 w-full m-0 p-5
+                        {% elif category == 'warning' %} text-yellow-800 bg-yellow-100 w-full m-0 p-5
+                        {% elif category == 'info' %} text-blue-800 bg-blue-100 w-full m-0 p-5
+                        {% else %} text-gray-800 bg-gray-100 w-full m-0 p-5
+                        {% endif %}" >
+                        {{message}}
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+    </header>
+
+     <!-- START CONTENT -->
+    {% block content %} 
+
+    {% endblock %}
+    <!-- END CONTENT -->
+
+</body>
+</html>

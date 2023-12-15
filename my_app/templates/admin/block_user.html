@@ -1,0 +1,27 @@
+{% extends 'layouts/_base.html' %}
+
+{% block content %}
+
+<h2 class="text-5xl font-bold text-red-500 flex justify-center mt-4 mb-8">Bloquear Usuario</h2>
+
+<div class="flex justify-center">
+    <div class="w-full lg:w-1/2">
+        <form method="post" action="{{ url_for('admin_bp.block_user', user_id=user.id) }}" class="bg-white p-6">
+            <div class="mb-4">
+                <label for="reason" class="block text-gray-700 text-sm font-bold mb-2">Motivo del bloqueo:</label>
+                <input type="text" name="reason" id="reason" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ">
+                    Bloquear Usuario
+                </button>
+                <a href="/admin/users" class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

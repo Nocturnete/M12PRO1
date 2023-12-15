@@ -1,0 +1,17 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flex mt-5 text-xl border rounded-lg" role="alert">
+            {% for category, message in messages %}
+            <div class=" 
+                {% if category == 'success' %} text-green-800 bg-green-100 w-full m-0 p-5
+                {% elif category == 'danger' %} text-red-800 bg-red-100 w-full m-0 p-5
+                {% elif category == 'warning' %} text-yellow-800 bg-yellow-100 w-full m-0 p-5
+                {% elif category == 'info' %} text-blue-800 bg-blue-100 w-full m-0 p-5
+                {% else %} text-gray-800 bg-gray-100 w-full m-0 p-5
+                {% endif %}" >
+                {{message}}
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
