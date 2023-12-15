@@ -5,6 +5,8 @@ from flask_principal import Principal
 from flask_debugtoolbar import DebugToolbarExtension
 from .helper_mail import MailManager
 from werkzeug.local import LocalProxy
+from logging.handlers import RotatingFileHandler
+import logging
 
 db_manager = SQLAlchemy()
 login_manager = LoginManager()
@@ -18,6 +20,14 @@ def create_app():
     app = Flask(__name__)
 
     app.config.from_object('config.Config')
+
+    log_handler = RotatingFileHandler('app.log', maxBytes=10240, backupCount=3)
+    log_handler.setFormatter(logging.Formatter(
+    '%(asctime)s %(levelname)s: %(message)s '
+    '[in %(pathname)s:%(lineno)d]'
+    ))
+    log_handler.setLevel(logging.DEBUG)
+    app.logger.addHandler(log_handler)
 
     login_manager.init_app(app)
     db_manager.init_app(app)

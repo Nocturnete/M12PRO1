@@ -21,4 +21,6 @@ class Config:
 
     CONTACT_ADDR = environ.get('CONTACT_ADDR')
 
-    EXTERNAL_URL = environ.get('EXTERNAL_URL')
+    EXTERNAL_URL = environ.get('EXTERNAL_URL')    
+    
+    LOG_LEVEL = environ.get('LOG_LEVEL', 'DEBUG').upper()

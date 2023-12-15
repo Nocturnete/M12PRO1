@@ -27,13 +27,10 @@ def product_list():
     
     products_banned = db.session.query(Banned_Products).order_by(Banned_Products.product_id.asc()).all()
 
-    # products_banned_list = [result.product_id for result in products_banned]
-
-    # Crear un diccionario para mapear product_id a reason
     products_banned_dict = {result.product_id: result.reason for result in products_banned}
 
     print("-----------")
-    print(products_banned_dict)
+    print(products_banned)
     print("-----------")
     return render_template('products/list.html', products_with_category = products_with_category, products_banned = products_banned_dict)
 
