@@ -14,8 +14,8 @@
                     </a>
                     {% endif %}
                     {%if current_user.role == 'moderator' %}
-                    <a href="/products/banned/list" class="relative hover:text-primary block font-medium capitalize transition">
-                        <span>Productos baneados</span>
+                    <a href="/products/list" class="relative hover:text-primary block font-medium capitalize transition">
+                        <span>Productos</span>
                     </a>
                     {% endif %}
                 </div>
@@ -23,10 +23,10 @@
                     <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">Categorías</h3>
                     <div class="space-y-2">
                         {% for (product, category) in products_with_category %}
-                            <div class="flex items-center">
-                                <input type="checkbox" name="category" id="cat-{{ category.id }}" class="category-checkbox text-primary focus:ring-0 rounded-sm cursor-pointer">
-                                <label for="cat-{{ category.id }}" class="text-gray-600 ml-3 cusror-pointer">{{ category.name }}</label>
-                            </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" name="category" id="cat-{{ category.id }}" class="category-checkbox text-primary focus:ring-0 rounded-sm cursor-pointer">
+                            <label for="cat-{{ category.id }}" class="text-gray-600 ml-3 cusror-pointer">{{ category.name }}</label>
+                        </div>
                         {% endfor %}
                     </div>
                 </div>
@@ -35,9 +35,9 @@
 
         <!-- PRODUCTOS -->
         <div class="col-span-3">
-            <div class="grid lg:grid-cols-3 grid-cols-2 gap-6">
+            <div class="grid md:grid-cols-3 grid-cols-2 gap-6">
                 {% for (product, category) in products_with_category %}
-                {% if product.id not in products_banned or product.seller_id == current_user.id %}
+                {% if product.id in products_banned %}
                 <div class="bg-white shadow rounded overflow-hidden group">
                     <div class="relative">
                         <!-- IMAGEN -->
@@ -55,23 +55,14 @@
                     </div>
                     <!-- BOTON -->
                     <a href="/products/read/{{ product.id }}" class="block w-full py-1 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">Mostrar</a>
-                    {% if current_user.role == 'moderator' and product.id not in products_banned %}
-                        <a href="/admin/products/{{ product.id }}/ban" class="block w-full py-1 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">Banear</a>
+                    {%if current_user.role == 'moderator' %}
+                    <a href="/admin/products/{{ product.id }}/unban" class="block w-full py-1 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">Desbanear</a>
                     {% endif %}
-
-                    {% if product.id in products_banned %}
-                    {% set reason = products_banned.get(product.id) %}
-                    <div class="bg-red-500 text-white p-2 text-center">
-                        Este producto ha sido bloqueado. Razón: {{ reason }}
-                    </div>
-                    {% endif %}
-
                 </div>
                 {% endif %}
                 {% endfor %}
             </div>
         </div>
-        
     </div>
 
 {% endblock %}

@@ -40,3 +40,11 @@ CREATE TABLE products (
 	FOREIGN KEY (status_id) REFERENCES statuses(id),
 	FOREIGN KEY (seller_id) REFERENCES users(id)
 );
+
+CREATE TABLE banned_products (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	product_id INTEGER,
+	reason TEXT NOT NULL,
+	created DATETIME NOT NULL DEFAULT (DATETIME('now')),
+	FOREIGN KEY (product_id) REFERENCES products (id)
+);

@@ -1,7 +1,12 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, flash, abort, request
-from .models import User, BlockedUser
+from flask import Blueprint, render_template, abort, flash, redirect, url_for
 from flask_login import current_user
-from .helper_role import Role, role_required
+from werkzeug.utils import secure_filename
+from .forms import BanProductForm, UnbanProductForm
+from .models import User, Product, Category, Status, Banned_Products
+from .helper_role import Role, role_required, Action, perm_required
+import uuid
+import os
+
 from . import db_manager as db
 
 
@@ -16,33 +21,61 @@ def admin_index():
 @role_required(Role.admin)
 def admin_users():
     users = db.session.query(User).all()
-    blocked_users = db.session.query(BlockedUser).all()
-    return render_template('admin/users_list.html', users=users, blocked_users=blocked_users)
+    return render_template('admin/users_list.html', users=users)
 
-@admin_bp.route('/admin/users/<int:user_id>/block', methods=['POST'])
-@role_required(Role.admin)
-def block_user(user_id):
-    user = User.query.get_or_404(user_id)
-    blocked_user = BlockedUser(user=user, reason=request.form.get('reason'))
-    db.session.add(blocked_user)
-    db.session.commit()
-    flash(f'Usuario {user.username} bloqueado con éxito.', 'success')
-    return redirect(url_for('admin.block_user'))
+@admin_bp.route('/admin/products/<int:product_id>/ban', methods = ['POST', 'GET'])
+@perm_required(Action.products_read)
+@role_required(Role.moderator)
+def ban_products(product_id):
 
-@admin_bp.route('/admin/users/<int:user_id>/unblock', methods=['POST'])
-@role_required(Role.admin)
-def unblock_user(user_id):
-    if not current_user.is_admin:
+    product = db.session.query(Product).filter(Product.id == product_id).one_or_none()
+
+    if not product:
+        abort(404)
+
+    if not current_user.is_action_allowed_to_product(Action.products_moderate, product):
         abort(403)
 
-    user = User.query.get_or_404(user_id)
-    blocked_user = BlockedUser.query.filter_by(user_id=user.id).first()
-    
-    if blocked_user:
-        db.session.delete(blocked_user)
-        db.session.commit()
-        flash(f'Usuario {user.username} desbloqueado con éxito.', 'success')
-    else:
-        flash(f'El usuario {user.username} no está bloqueado.', 'warning')
+    form = BanProductForm()
+    if form.validate_on_submit(): # si s'ha fet submit al formulari
+        new_product = Banned_Products()
+        new_product.product_id = product_id
 
-    return redirect(url_for('admin.unblock_user'))
+        # dades del formulari a l'objecte product
+        form.populate_obj(new_product)
+
+        # insert!
+        db.session.add(new_product)
+        db.session.commit()
+
+        flash("Producte banejat", "success")
+        return redirect(url_for('products_bp.product_list'))
+    else: # GET
+        return render_template('admin/ban_product.html', form = form, product = product)
+    
+@admin_bp.route('/admin/products/<int:product_id>/unban', methods = ['POST', 'GET'])
+@perm_required(Action.products_read)
+@role_required(Role.moderator)
+def unban_products(product_id):
+
+    product = db.session.query(Product).filter(Product.id == product_id).one_or_none()
+
+    if not product:
+        abort(404)
+
+    if not current_user.is_action_allowed_to_product(Action.products_moderate, product):
+        abort(403)
+
+    eliminar = db.session.query(Banned_Products).filter(Banned_Products.product_id == product_id).one_or_none()
+
+
+    form = UnbanProductForm()
+    if form.validate_on_submit(): # si s'ha fet submit al formulari
+        if eliminar:
+            db.session.delete(eliminar)
+            db.session.commit()
+
+        flash("Producte desbanejat", "success")
+        return redirect(url_for('products_bp.product_list'))
+    else: # GET
+        return render_template('admin/unban_product.html', form = form, product = product)

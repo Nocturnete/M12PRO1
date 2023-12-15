@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, abort
 from flask_login import current_user
 from werkzeug.utils import secure_filename
-from .models import Product, Category, Status
+from .models import Product, Category, Status, Banned_Products
 from .forms import ProductForm, DeleteForm
 from .helper_role import Action, perm_required
 from . import db_manager as db, mail_manager as mail, logger
@@ -24,9 +24,30 @@ def templates_processor():
 @perm_required(Action.products_list)
 def product_list():
     products_with_category = db.session.query(Product, Category).join(Category).order_by(Product.id.asc()).all()
-    logger.debug(f"products_with_category = {products_with_category}")
+    
+    products_banned = db.session.query(Banned_Products).order_by(Banned_Products.product_id.asc()).all()
 
-    return render_template('products/list.html', products_with_category = products_with_category)
+    # products_banned_list = [result.product_id for result in products_banned]
+
+    # Crear un diccionario para mapear product_id a reason
+    products_banned_dict = {result.product_id: result.reason for result in products_banned}
+
+    print("-----------")
+    print(products_banned_dict)
+    print("-----------")
+    return render_template('products/list.html', products_with_category = products_with_category, products_banned = products_banned_dict)
+
+@products_bp.route('/products/banned/list')
+@perm_required(Action.products_list)
+def products_banned_list():
+    # select amb join que retorna una llista de resultats
+    products_with_category = db.session.query(Product, Category).join(Category).order_by(Product.id.asc()).all()
+    
+    products_banned = db.session.query(Banned_Products.product_id).order_by(Banned_Products.product_id.asc()).all()
+
+    products_banned_list = [result.product_id for result in products_banned]
+
+    return render_template('products/banned.html', products_with_category = products_with_category, products_banned = products_banned_list)
 
 # ------------------------------------------------------------------
 # |                          create.html                           |
