@@ -23,7 +23,6 @@ class User(UserMixin, db.Model):
     
     @hybrid_property
     def password(self):
-        # https://stackoverflow.com/a/31915355
         return ""
     
     @password.setter

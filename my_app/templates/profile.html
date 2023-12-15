@@ -79,9 +79,11 @@
                     <h4 class="text-gray-700 font-medium">Nombre: {{ form.name }}</h4>
                     <p class="text-gray-800">Correo: {{ form.email }}</p>
                     <p class="text-gray-800">Rol: {{ form.role }}</p>
+                    {% if current_user.blocked %}
+                        <p class="text-red-500">¡Estás bloqueado! Razón: {{ current_user.blocked_reason }}</p>
+                    {% endif %}
                 </div>
             </div>
-
         </div>
     </div>
 

@@ -21,6 +21,9 @@ def init():
 @login_required
 def profile():
     blocked_user = BlockedUser.query.filter_by(user_id=current_user.id).first()
+    if current_user.blocked_user:
+        flash('No puedes crear nuevos productos mientras estás bloqueado.', 'warning')
+
     form = ProfileForm()
     if form.validate_on_submit():
         something_change = False

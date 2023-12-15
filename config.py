@@ -9,6 +9,8 @@ class Config:
     SECRET_KEY = environ.get('SECRET_KEY')
     SESSION_COOKIE_NAME = environ.get('SESSION_COOKIE_NAME')
 
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
+
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + path.join(basedir, environ.get('SQLITE_FILE_RELATIVE_PATH'))
     SQLALCHEMY_ECHO = environ.get('SQLALCHEMY_ECHO')
 
