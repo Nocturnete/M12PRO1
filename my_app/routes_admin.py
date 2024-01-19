@@ -29,10 +29,10 @@ def ban_products(product_id):
         abort(403)
     form = BanProductForm()
     if form.validate_on_submit():
-        new_product = Banned_Products()
-        new_product.product_id = product_id
-        form.populate_obj(new_product)
-        Banned_Products.save(new_product)
+        ban_product = Banned_Products()
+        ban_product.product_id = product_id
+        form.populate_obj(ban_product)
+        Banned_Products.save(ban_product)
         flash("Producte banejat", "success")
         return redirect(url_for('products_bp.product_list'))
     else:
