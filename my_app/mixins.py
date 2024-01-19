@@ -8,9 +8,6 @@ class BaseMixin():
         r = cls(**kwargs)
         return r.save()
 
-    def update(self):
-        return self.save()
-
     def save(self):
         try:
             db.session.add(self)
@@ -41,8 +38,8 @@ class BaseMixin():
         return db.session.query(cls).filter_by(**kwargs).one_or_none()
 
     @classmethod
-    def get_all_filtered_by(cls, **kwargs):
-        return db.session.query(cls).filter_by(**kwargs).order_by(cls.id.asc()).all()
+    def get_all_join_by(cls, **kwargs):
+        return db.session.query(cls).join(**kwargs).order_by(cls.id.asc()).all()
 
     @classmethod
     def get_with(cls, id, join_cls):
@@ -53,5 +50,21 @@ class BaseMixin():
         return db.session.query(cls, join_cls).join(join_cls).order_by(cls.id.asc()).all()
     
     @classmethod
+    def get_all_with_tree_classes(cls, join_cls, join_another_cls, id):
+        return db.session.query(cls, join_cls, join_another_cls).join(join_cls).join(join_another_cls).filter(cls.id == id).one_or_none()
+
+    @classmethod
     def get_or_404(cls, id):
         return db.session.query(cls).get_or_404(id)
+    
+    @classmethod
+    def get_order_by(cls):
+        return db.session.query(cls).order_by(cls.id.asc()).all()
+    
+    @classmethod
+    def get_order_by_banned(cls):
+        return db.session.query(cls).order_by(cls.product_id.asc()).all()
+    
+    @classmethod
+    def get_one_filtered(cls, id):
+        return db.session.query(cls).filter(cls.id == id).one_or_none()

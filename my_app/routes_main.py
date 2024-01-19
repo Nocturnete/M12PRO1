@@ -1,14 +1,11 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import current_user, login_required, logout_user
 from .forms import ProfileForm, LoginForm, RegisterForm, ResendForm, ProductForm, CategoryForm, StatusForm, DeleteForm
-from . import db_manager as db, mail_manager as mail, logger
+from . import mail_manager as mail
 import secrets
 from .models import BlockedUser
 
-
-
 main_bp = Blueprint("main_bp", __name__)
-
 
 @main_bp.route('/')
 def init():
@@ -48,7 +45,6 @@ def profile():
         if not something_change:
             flash("Cap canvi", "success")
         else:
-            db.session.commit()
             if not current_user.verified:
                 mail.send_register_email(current_user.name, current_user.email, current_user.email_token)
                 logout_user()

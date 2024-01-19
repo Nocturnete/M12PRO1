@@ -4,7 +4,6 @@ from werkzeug.utils import secure_filename
 from .models import Product, Category, Status, Banned_Products
 from .forms import ProductForm, DeleteForm
 from .helper_role import Action, perm_required
-from . import db_manager as db, mail_manager as mail, logger
 import uuid
 import os
 
@@ -23,28 +22,26 @@ def templates_processor():
 @products_bp.route('/products/list')
 @perm_required(Action.products_list)
 def product_list():
-    products_with_category = db.session.query(Product, Category).join(Category).order_by(Product.id.asc()).all()
-    
-    products_banned = db.session.query(Banned_Products).order_by(Banned_Products.product_id.asc()).all()
-
+    products_with_category = Product.get_all_with(Category)
+    products_banned = Banned_Products.get_order_by_banned()
+    categories = Category.get_order_by()
     products_banned_dict = {result.product_id: result.reason for result in products_banned}
 
     print("-----------")
     print(products_banned)
     print("-----------")
-    return render_template('products/list.html', products_with_category = products_with_category, products_banned = products_banned_dict)
+    return render_template('products/list.html', products_with_category = products_with_category, products_banned = products_banned_dict, categories = categories)
 
 @products_bp.route('/products/banned/list')
 @perm_required(Action.products_list)
 def products_banned_list():
     # select amb join que retorna una llista de resultats
-    products_with_category = db.session.query(Product, Category).join(Category).order_by(Product.id.asc()).all()
-    
-    products_banned = db.session.query(Banned_Products.product_id).order_by(Banned_Products.product_id.asc()).all()
-
+    products_with_category = Product.get_all_with(Category)
+    products_banned = Banned_Products.get_order_by_banned()
+    categories = Category.get_order_by()
     products_banned_list = [result.product_id for result in products_banned]
 
-    return render_template('products/banned.html', products_with_category = products_with_category, products_banned = products_banned_list)
+    return render_template('products/banned.html', products_with_category = products_with_category, products_banned = products_banned_list, categories = categories)
 
 # ------------------------------------------------------------------
 # |                          create.html                           |
@@ -56,8 +53,8 @@ def product_create():
         flash('No puedes crear nuevos productos mientras estás bloqueado.', 'warning')
         return redirect(url_for('products_bp.product_list'))
     
-    categories = db.session.query(Category).order_by(Category.id.asc()).all()
-    statuses = db.session.query(Status).order_by(Status.id.asc()).all()
+    categories = Category.get_order_by()
+    statuses = Status.get_order_by()
 
     form = ProductForm()
     form.category_id.choices = [(category.id, category.name) for category in categories]
@@ -75,8 +72,7 @@ def product_create():
         else:
             new_product.photo = "no_image.png"
 
-        db.session.add(new_product)
-        db.session.commit()
+        Product.save(new_product)
 
         flash("Se ha creado el producto", "success")
 
@@ -91,8 +87,7 @@ def product_create():
 @products_bp.route('/products/read/<int:product_id>')
 @perm_required(Action.products_read)
 def product_read(product_id):
-    result = db.session.query(Product, Category, Status).join(Category).join(Status).filter(Product.id == product_id).one_or_none()
-
+    result = Product.get_all_with_tree_classes(Category, Status, id=product_id)
     if not result:
         abort(404)
 
@@ -105,16 +100,15 @@ def product_read(product_id):
 @products_bp.route('/products/update/<int:product_id>',methods = ['POST', 'GET'])
 @perm_required(Action.products_update)
 def product_update(product_id):
-    product = db.session.query(Product).filter(Product.id == product_id).one_or_none()
-    
+    product = Product.get_one_filtered(id=product_id)
     if not product:
         abort(404)
 
     if not current_user.is_action_allowed_to_product(Action.products_update, product):
         abort(403)
 
-    categories = db.session.query(Category).order_by(Category.id.asc()).all()
-    statuses = db.session.query(Status).order_by(Status.id.asc()).all()
+    categories = Category.get_order_by()
+    statuses = Status.get_order_by()
 
     form = ProductForm(obj = product)
     form.category_id.choices = [(category.id, category.name) for category in categories]
@@ -127,8 +121,7 @@ def product_update(product_id):
         if filename:
             product.photo = filename
 
-        db.session.add(product)
-        db.session.commit()
+        Product.save(product)
 
         flash("Producto actualizado", "success")
 
@@ -143,7 +136,7 @@ def product_update(product_id):
 @products_bp.route('/products/delete/<int:product_id>',methods = ['GET', 'POST'])
 @perm_required(Action.products_delete)
 def product_delete(product_id):
-    product = db.session.query(Product).filter(Product.id == product_id).one_or_none()
+    product = Product.get_one_filtered(id=product_id)
 
     if not product:
         abort(404)
@@ -153,8 +146,7 @@ def product_delete(product_id):
 
     form = DeleteForm()
     if form.validate_on_submit():
-        db.session.delete(product)
-        db.session.commit()
+        Product.delete(product)
 
         flash("Producto borrado", "success")
 

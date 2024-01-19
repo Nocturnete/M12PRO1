@@ -1,11 +1,8 @@
 from flask import Blueprint, render_template, abort, flash, redirect, url_for, request
 from flask_login import current_user
-from werkzeug.utils import secure_filename
 from .forms import BanProductForm, UnbanProductForm
-from .models import User, Product, Category, Status, Banned_Products, BlockedUser
+from .models import User, Product, Banned_Products, BlockedUser
 from .helper_role import Role, role_required, Action, perm_required
-import uuid
-import os
 from . import db_manager as db
 
 admin_bp = Blueprint("admin_bp", __name__)
@@ -25,7 +22,7 @@ def admin_users():
 @perm_required(Action.products_read)
 @role_required(Role.moderator)
 def ban_products(product_id):
-    product = db.session.query(Product).filter(Product.id == product_id).one_or_none()
+    product = Product.get_filtered_by(id=product_id)
     if not product:
         abort(404)
     if not current_user.is_action_allowed_to_product(Action.products_moderate, product):
@@ -35,8 +32,7 @@ def ban_products(product_id):
         new_product = Banned_Products()
         new_product.product_id = product_id
         form.populate_obj(new_product)
-        db.session.add(new_product)
-        db.session.commit()
+        Banned_Products.save(new_product)
         flash("Producte banejat", "success")
         return redirect(url_for('products_bp.product_list'))
     else:
@@ -46,17 +42,16 @@ def ban_products(product_id):
 @perm_required(Action.products_read)
 @role_required(Role.moderator)
 def unban_products(product_id):
-    product = db.session.query(Product).filter(Product.id == product_id).one_or_none()
+    product = Product.get_filtered_by(id=product_id)
     if not product:
         abort(404)
     if not current_user.is_action_allowed_to_product(Action.products_moderate, product):
         abort(403)
-    eliminar = db.session.query(Banned_Products).filter(Banned_Products.product_id == product_id).one_or_none()
+    eliminar = Banned_Products.get_filtered_by(product_id = product_id)
     form = UnbanProductForm()
     if form.validate_on_submit():
         if eliminar:
-            db.session.delete(eliminar)
-            db.session.commit()
+            Banned_Products.delete(eliminar)
         flash("Producte desbanejat", "success")
         return redirect(url_for('products_bp.product_list'))
     else:
