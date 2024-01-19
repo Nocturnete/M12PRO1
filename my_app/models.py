@@ -107,3 +107,31 @@ class Banned_Products(db.Model, BaseMixin):
     product_id = db.Column(db.Integer, db.ForeignKey("products.id"), primary_key=True)
     reason = db.Column(db.String, nullable=False)
     created = db.Column(db.DateTime, server_default=func.now())
+
+class Order(db.Model, BaseMixin):
+    __tablename__ = "orders"
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
+    buyer_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    offer = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
+    created = db.Column(db.DateTime, server_default=func.now())
+    
+    product = relationship("Product", back_populates="orders")
+    buyer = relationship("User", back_populates="orders")
+
+    __table_args__ = (
+        db.UniqueConstraint("product_id", "buyer_id", name="uc_product_buyer"),
+    )
+
+class ConfirmedOrder(db.Model, BaseMixin):
+    __tablename__ = "confirmed_orders"
+    order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), primary_key=True)
+    created = db.Column(db.DateTime, server_default=func.now())
+    
+    order = relationship("Order", back_populates="confirmed_order")
+
+User.orders = relationship("Order", back_populates="buyer", uselist=True)
+Product.orders = relationship("Order", back_populates="product", uselist=True)
+
+Order.confirmed_order = relationship("ConfirmedOrder", back_populates="order", uselist=False)
+ConfirmedOrder.order = relationship("Order", back_populates="confirmed_order", uselist=False)

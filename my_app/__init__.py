@@ -37,6 +37,7 @@ def create_app():
     
     with app.app_context():
         from . import commands, routes_main, routes_auth, routes_admin, routes_products, routes_category, routes_status
+        from .api import api_bp
         # from . import commands
 
         app.register_blueprint(routes_main.main_bp)
@@ -45,7 +46,8 @@ def create_app():
         app.register_blueprint(routes_products.products_bp)
         app.register_blueprint(routes_category.category_bp)
         app.register_blueprint(routes_status.status_bp)
-        
+        app.register_blueprint(api_bp, url_prefix='/api/v1.0')
+    
         # Registra comandes
         # app.cli.add_command(commands.db_cli)
 
