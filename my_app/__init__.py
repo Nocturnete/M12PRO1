@@ -21,7 +21,7 @@ def create_app():
 
     app.config.from_object('config.Config')
 
-    log_handler = RotatingFileHandler('app.log', maxBytes=10240, backupCount=3)
+    log_handler = RotatingFileHandler('app.log', maxBytes=10240, backupCount=1)
     log_handler.setFormatter(logging.Formatter(
     '%(asctime)s %(levelname)s: %(message)s '
     '[in %(pathname)s:%(lineno)d]'
