@@ -34,6 +34,11 @@
             <label for="product_category" class="block text-sm font-medium text-gray-600">Categoría del Producto</label>
             {{ form.category_id(class="mt-1 p-2 w-full border rounded-md") }}
          </div>
+         <!--Status-->
+         <div>
+            <label for="product_category" class="block text-sm font-medium text-gray-600">Categoría del Producto</label>
+            {{ form.status_id(class="mt-1 p-2 w-full border rounded-md") }}
+         </div>
          <!--Botón-->
          <p>{{ form.submit(value="MODIFICAR", class="w-full p-3 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition duration-300") }}</p>
          {{ render_errors(form) }}

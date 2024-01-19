@@ -6,10 +6,11 @@
 
 <div class="flex justify-center">
     <div class="w-full lg:w-1/2">
-        <form method="post" action="{{ url_for('admin_bp.block_user', user_id=user.id) }}" class="bg-white p-6">
+        <form method="post" action="/admin/users/{{ user.id }}/block" class="bg-white p-6">
+            {{ form.csrf_token }}
             <div class="mb-4">
                 <label for="reason" class="block text-gray-700 text-sm font-bold mb-2">Motivo del bloqueo:</label>
-                <input type="text" name="reason" id="reason" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                {{form.reason(class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline")}}
             </div>
 
             <div class="flex items-center justify-between">

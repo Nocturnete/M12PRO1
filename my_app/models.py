@@ -17,7 +17,6 @@ class User(db.Model, BaseMixin, UserMixin):
     email_token = db.Column(db.String, nullable=True, server_default=None)
     created = db.Column(db.DateTime, server_default=func.now())
     updated = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
-    blocked_user = relationship('BlockedUser', back_populates='user', uselist=False)
 
     def get_id(self):
         return self.email
@@ -100,7 +99,6 @@ class BlockedUser(db.Model, BaseMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True)
     reason = db.Column(db.String)
-    user = relationship('User', back_populates='blocked_user')
 
 class Banned_Products(db.Model, BaseMixin):
     __tablename__ = "banned_products"
