@@ -68,3 +68,7 @@ class BaseMixin():
     @classmethod
     def get_one_filtered(cls, id):
         return db.session.query(cls).filter(cls.id == id).one_or_none()
+        
+    @classmethod
+    def get_one_filtered_name(cls, name):
+        return db.session.query(cls).filter(cls.name == name).one_or_none()

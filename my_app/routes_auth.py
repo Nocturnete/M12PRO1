@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, url_for, render_template, flash
 from flask_login import current_user, login_required, login_user, logout_user
-from . import db_manager as db, login_manager, mail_manager
+from . import login_manager, mail_manager
 from .forms import LoginForm, RegisterForm, ResendForm
 from .helper_role import notify_identity_changed, Role
 from .models import User
@@ -40,42 +40,28 @@ def login():
 def register():
     if current_user.is_authenticated:
         return redirect(url_for("main_bp.init"))
-
     form = RegisterForm()
     if form.validate_on_submit():
         new_user = User()
-       
         form.populate_obj(new_user)
-
         new_user.role = Role.wanner
-
         new_user.verified = False
         new_user.email_token = secrets.token_urlsafe(20)
-
-        db.session.add(new_user)
-        db.session.commit()
-
+        User.save(new_user)
         mail_manager.send_register_email(new_user.name, new_user.email, new_user.email_token)
-
         flash("Verifica el correo", "success")
-        
         return redirect(url_for("auth_bp.login"))
-    
     return render_template('register.html', form = form)
 
 @auth_bp.route("/verify/<name>/<token>")
 def verify(name, token):
-    user = db.session.query(User).filter(User.name == name).one_or_none()
+    user = User.get_one_filtered_name(name = name)
     if user and user.email_token == token:
         user.verified = True
         user.email_token = None 
-        db.session.commit()
-
         flash("Se ha verificado el correo", "success")
-
     else:
         flash("Error de verificación", "error")
-
     return redirect(url_for("auth_bp.login"))
 
 @auth_bp.route("/resend", methods=["GET", "POST"])
