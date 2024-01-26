@@ -72,7 +72,7 @@ def resend():
     form = ResendForm()
     if form.validate_on_submit():
         email = form.email.data
-        user = db.session.query(User).filter(User.email == email).one_or_none()
+        user = User.get_one_filtered_email(email = email)
         if user:
             if user.verified:
                 flash("Esta cuenta ya esta verificada", "error")
@@ -100,7 +100,7 @@ def logout():
 @login_manager.user_loader
 def load_user(email):
     if email is not None:
-        return db.session.query(User).filter(User.email == email).one_or_none()
+        return User.get_one_filtered_email(email = email)
     return None
 
 @login_manager.unauthorized_handler

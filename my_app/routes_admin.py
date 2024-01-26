@@ -6,11 +6,8 @@ from werkzeug.utils import secure_filename
 from .forms import BanProductForm, UnbanProductForm, BlockUserForm, UnblockUserForm
 from .models import User, Product, Category, Status, Banned_Products, BlockedUser
 from .helper_role import Role, role_required, Action, perm_required
-from . import db_manager as db
-
 
 admin_bp = Blueprint("admin_bp", __name__)
-
 
 @admin_bp.route('/admin')
 @role_required(Role.admin, Role.moderator)
@@ -20,21 +17,20 @@ def admin_index():
 @admin_bp.route('/admin/users')
 @role_required(Role.admin)
 def admin_users():
-    users = db.session.query(User).all()
-    blockedUsers = db.session.query(BlockedUser).order_by(BlockedUser.user_id).all()
+    users = User.get_all()
+    blockedUsers = BlockedUser.get_order_by_userId()
     return render_template('admin/users/users_list.html', users=users, blockedUsers=blockedUsers)
 
 @admin_bp.route('/admin/users/<int:user_id>/block', methods=['GET', 'POST'])
 @role_required(Role.admin)
 def block_user(user_id):
-    user = db.session.query(User).get(user_id)
+    user = User.get_userId(user_id)
     form = BlockUserForm()
     if form.validate_on_submit():
         userToBlock = BlockedUser()
         userToBlock.user_id = user_id
         form.populate_obj(userToBlock)
-        db.session.add(userToBlock)
-        db.session.commit()
+        BlockedUser.save(userToBlock)
         flash(f'Usuario {user.name} bloqueado con éxito.', 'success')
         return redirect(url_for('admin_bp.admin_users'))
     return render_template('admin/users/block_user.html', user=user, form=form)
@@ -42,15 +38,14 @@ def block_user(user_id):
 @admin_bp.route('/admin/users/<int:user_id>/unblock', methods=['GET', 'POST'])
 @role_required(Role.admin)
 def unblock_user(user_id):
-    user = db.session.query(User).get(user_id)
-    blocked_user = db.session.query(BlockedUser).filter(BlockedUser.user_id == user_id).one_or_none()
+    user = User.get_id(user_id)
+    blocked_user = BlockedUser.get_one_filtered_userId(user_id = user_id)
     reason = blocked_user.reason if blocked_user else None
     form = UnblockUserForm()
     if form.validate_on_submit():
-        blocked_user_to_delete = db.session.query(BlockedUser).filter(BlockedUser.user_id == user_id).one_or_none()
+        blocked_user_to_delete = BlockedUser.get_one_filtered_userId(user_id = user_id)
         if blocked_user_to_delete:
-            db.session.delete(blocked_user_to_delete)
-            db.session.commit()
+            BlockedUser.delete(blocked_user_to_delete)
             flash(f'Usuario {user.name} desbloqueado con éxito.', 'success')
             return redirect(url_for('admin_bp.admin_users'))
     return render_template('admin/users/unblock_user.html', user=user, form=form, reason=reason)

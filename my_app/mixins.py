@@ -28,6 +28,10 @@ class BaseMixin():
     def get(cls, id):
         current_app.logger.debug(cls)
         return db.session.query(cls).get(id)
+    
+    @classmethod
+    def get_id(cls, id):
+        return db.session.query(cls).get(id)
 
     @classmethod
     def get_all(cls):
@@ -72,3 +76,20 @@ class BaseMixin():
     @classmethod
     def get_one_filtered_name(cls, name):
         return db.session.query(cls).filter(cls.name == name).one_or_none()
+            
+    @classmethod
+    def get_one_filtered_email(cls, email):
+        return db.session.query(cls).filter(cls.email == email).one_or_none()
+    
+    @classmethod
+    def get_one_filtered_userId(cls, user_id):
+        return db.session.query(cls).filter(cls.user_id == user_id).one_or_none()
+    
+    @classmethod
+    def get_order_by_userId(cls):
+        return db.session.query(cls).order_by(cls.user_id.asc()).all()
+    
+    @classmethod
+    def get_userId(cls, user_id):
+        return db.session.query(cls).get(user_id)
+
