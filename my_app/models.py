@@ -4,9 +4,9 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import check_password_hash, generate_password_hash
-from .mixins import BaseMixin
+from .mixins import BaseMixin, SerializableMixin
 
-class User(db.Model, BaseMixin, UserMixin):
+class User(db.Model, BaseMixin, UserMixin, SerializableMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
@@ -69,7 +69,7 @@ class User(db.Model, BaseMixin, UserMixin):
         # si hem arribat fins aquí, l'usuari té permisos
         return True
 
-class Product(db.Model, BaseMixin):
+class Product(db.Model, BaseMixin, SerializableMixin):
     __tablename__ = "products"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
@@ -88,7 +88,7 @@ class Category(db.Model, BaseMixin):
     name = db.Column(db.String, nullable=False)
     slug = db.Column(db.String, nullable=False)
 
-class Status(db.Model, BaseMixin):
+class Status(db.Model, BaseMixin, SerializableMixin):
     __tablename__ = "statuses"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -106,7 +106,7 @@ class Banned_Products(db.Model, BaseMixin):
     reason = db.Column(db.String, nullable=False)
     created = db.Column(db.DateTime, server_default=func.now())
 
-class Order(db.Model, BaseMixin):
+class Order(db.Model, BaseMixin, SerializableMixin):
     __tablename__ = "orders"
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
