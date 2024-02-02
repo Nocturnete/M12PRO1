@@ -75,6 +75,7 @@
 2024-02-02 17:18:20,155 DEBUG: <class 'my_app.models.Order'> [in /home/gedica/Proyecto_1/my_app/mixins.py:43]
 2024-02-02 17:18:49,777 DEBUG: <class 'my_app.models.Order'> [in /home/gedica/Proyecto_1/my_app/mixins.py:43]
 2024-02-02 17:18:49,777 DEBUG: <class 'my_app.models.Order'> [in /home/gedica/Proyecto_1/my_app/mixins.py:43]
+<<<<<<< Updated upstream
 2024-02-02 18:56:06,758 INFO: Aplicació iniciada [in /home/gedica/Proyecto_1/my_app/__init__.py:54]
 2024-02-02 18:56:06,766 INFO: Aplicació iniciada [in /home/gedica/Proyecto_1/my_app/__init__.py:54]
 2024-02-02 18:56:06,766 INFO: Aplicació iniciada [in /home/gedica/Proyecto_1/my_app/__init__.py:54]
@@ -87,3 +88,5 @@
 2024-02-02 18:57:37,163 INFO: Aplicació iniciada [in /home/gedica/Proyecto_1/my_app/__init__.py:54]
 2024-02-02 18:57:37,170 INFO: Aplicació iniciada [in /home/gedica/Proyecto_1/my_app/__init__.py:54]
 2024-02-02 18:57:37,170 INFO: Aplicació iniciada [in /home/gedica/Proyecto_1/my_app/__init__.py:54]
+=======
+>>>>>>> Stashed changes
