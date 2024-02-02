@@ -37,7 +37,6 @@ class BaseMixin():
         except:
             return False
 
-
     @classmethod
     def get(cls, id):
         current_app.logger.debug(cls)
