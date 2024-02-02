@@ -29,6 +29,14 @@ class BaseMixin():
             return True
         except:
             return False
+        
+    def remove(self):
+        try:
+            db.session.remove(self)
+            return True
+        except:
+            return False
+
 
     @classmethod
     def get(cls, id):
