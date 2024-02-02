@@ -19,6 +19,7 @@ def create_order():
         current_app.logger.error(e)
         return bad_request(str(e))
 
+
 @api_bp.route('/orders/<order_id>', methods=['PUT'])
 def edit_order(order_id):
     try:
