@@ -4,7 +4,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import check_password_hash, generate_password_hash
-from .mixins import BaseMixin
+from .mixins import BaseMixin, SerializableMixin
 
 class User(db.Model, BaseMixin, UserMixin):
     __tablename__ = "users"
@@ -70,7 +70,7 @@ class User(db.Model, BaseMixin, UserMixin):
         # si hem arribat fins aquí, l'usuari té permisos
         return True
 
-class Product(db.Model, BaseMixin):
+class Product(db.Model, BaseMixin, SerializableMixin):
     __tablename__ = "products"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
@@ -83,7 +83,7 @@ class Product(db.Model, BaseMixin):
     created = db.Column(db.DateTime, server_default=func.now())
     updated = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
 
-class Category(db.Model, BaseMixin):
+class Category(db.Model, BaseMixin, SerializableMixin):
     __tablename__ = "categories"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -108,7 +108,7 @@ class Banned_Products(db.Model, BaseMixin):
     reason = db.Column(db.String, nullable=False)
     created = db.Column(db.DateTime, server_default=func.now())
 
-class Order(db.Model, BaseMixin):
+class Order(db.Model, BaseMixin, SerializableMixin):
     __tablename__ = "orders"
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
@@ -123,7 +123,7 @@ class Order(db.Model, BaseMixin):
         db.UniqueConstraint("product_id", "buyer_id", name="uc_product_buyer"),
     )
 
-class ConfirmedOrder(db.Model, BaseMixin):
+class ConfirmedOrder(db.Model, BaseMixin, SerializableMixin):
     __tablename__ = "confirmed_orders"
     order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), primary_key=True)
     created = db.Column(db.DateTime, server_default=func.now())
