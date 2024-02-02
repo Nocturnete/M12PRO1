@@ -36,15 +36,15 @@ def update_order(order_id):
         return bad_request(str(e))
     
 
-api_bp.route('/orders/<order_id>', methods=['DELETE'])
+@api_bp.route('/orders/<order_id>', methods=['DELETE'])
 def delete_order(order_id):
     try:
         order = Order.query.get(order_id)
         if not order:
             return not_found("Orden no encontrada")
 
-        with db.session.begin():
-            db.session.delete(order)
+        db.session.delete(order)
+        db.session.commit()
 
         return json_response({'message': 'Orden eliminada exitosamente'})
     except Exception as e:

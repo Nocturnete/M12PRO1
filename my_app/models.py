@@ -17,6 +17,7 @@ class User(db.Model, BaseMixin, UserMixin, SerializableMixin):
     email_token = db.Column(db.String, nullable=True, server_default=None)
     created = db.Column(db.DateTime, server_default=func.now())
     updated = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
+    blocked_user = relationship('BlockedUser', back_populates='user', uselist=False)
 
     def get_id(self):
         return self.email
@@ -99,6 +100,7 @@ class BlockedUser(db.Model, BaseMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True)
     reason = db.Column(db.String)
+    user = relationship('User', back_populates='blocked_user')
 
 class Banned_Products(db.Model, BaseMixin):
     __tablename__ = "banned_products"
@@ -116,7 +118,7 @@ class Order(db.Model, BaseMixin, SerializableMixin):
     
     product = relationship("Product", back_populates="orders")
     buyer = relationship("User", back_populates="orders")
-
+    
     __table_args__ = (
         db.UniqueConstraint("product_id", "buyer_id", name="uc_product_buyer"),
     )
@@ -131,7 +133,6 @@ class Order(db.Model, BaseMixin, SerializableMixin):
             pass
 
         return value
-
     def update(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -143,13 +144,13 @@ class Order(db.Model, BaseMixin, SerializableMixin):
 
         db.session.commit()
 
-
 class ConfirmedOrder(db.Model, BaseMixin):
     __tablename__ = "confirmed_orders"
     order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), primary_key=True)
     created = db.Column(db.DateTime, server_default=func.now())
     
     order = relationship("Order", back_populates="confirmed_order")
+
 
 User.orders = relationship("Order", back_populates="buyer", uselist=True)
 Product.orders = relationship("Order", back_populates="product", uselist=True)
