@@ -83,7 +83,7 @@ class Product(db.Model, BaseMixin, SerializableMixin):
     created = db.Column(db.DateTime, server_default=func.now())
     updated = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
 
-class Category(db.Model, BaseMixin):
+class Category(db.Model, BaseMixin, SerializableMixin):
     __tablename__ = "categories"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
