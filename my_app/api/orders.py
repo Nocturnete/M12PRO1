@@ -3,14 +3,18 @@ from flask import current_app
 from ..models import Order
 from ..helper_json import json_response, json_request
 from .errors import not_found, bad_request
-from .. import  db_manager as db  # Asegúrate de importar tu instancia de la base de datos
+from .. import  db_manager as db
+from flask import request
 
-@api_bp.route('/orders', methods=['GET'])
-def get_orders():
+
+@api_bp.route('/orders', methods=['POST'])
+def create_order():
     try:
-        orders = Order.query.all()
-        data = {'orders': [order.to_dict() for order in orders]}
-        return json_response(data)
+        order_data = request.get_json()
+        new_order = Order(**order_data)
+        db.session.add(new_order)
+        db.session.commit()
+        return json_response({'order': new_order.to_dict()})
     except Exception as e:
         current_app.logger.error(e)
         return bad_request(str(e))
