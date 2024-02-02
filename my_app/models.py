@@ -56,7 +56,7 @@ class User(db.Model, BaseMixin, UserMixin, SerializableMixin):
     
     @hybrid_property
     def password(self):
-        return ""
+        return "No password"
     
     @password.setter
     def password(self, plain_text_password):
