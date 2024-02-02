@@ -1,7 +1,7 @@
 from flask_login import UserMixin
 from . import db_manager as db
 from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, validates
 from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import check_password_hash, generate_password_hash
 from .mixins import BaseMixin, SerializableMixin
@@ -120,6 +120,29 @@ class Order(db.Model, BaseMixin, SerializableMixin):
     __table_args__ = (
         db.UniqueConstraint("product_id", "buyer_id", name="uc_product_buyer"),
     )
+
+    @validates('product_id', 'buyer_id', 'offer')
+    def validate_fields(self, key, value):
+        if key == 'product_id':
+            pass
+        elif key == 'buyer_id':
+            pass
+        elif key == 'offer':
+            pass
+
+        return value
+
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+        # Additional validations if needed
+        self.validate_fields('product_id', self.product_id)
+        self.validate_fields('buyer_id', self.buyer_id)
+        self.validate_fields('offer', self.offer)
+
+        db.session.commit()
+
 
 class ConfirmedOrder(db.Model, BaseMixin):
     __tablename__ = "confirmed_orders"
