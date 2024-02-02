@@ -5,6 +5,8 @@ from sqlalchemy.orm import relationship, validates
 from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import check_password_hash, generate_password_hash
 from .mixins import BaseMixin, SerializableMixin
+from datetime import timedelta, timezone, datetime
+import secrets
 
 class User(db.Model, BaseMixin, UserMixin, SerializableMixin):
     __tablename__ = "users"
@@ -18,6 +20,36 @@ class User(db.Model, BaseMixin, UserMixin, SerializableMixin):
     created = db.Column(db.DateTime, server_default=func.now())
     updated = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
     blocked_user = relationship('BlockedUser', back_populates='user', uselist=False)
+    token = db.Column(db.String, unique=True, nullable=True)
+    token_expiration = db.Column(db.DateTime, nullable=True)
+
+    exclude_attr = ['password']
+
+    def get_id(self):
+        return self.email
+
+    def get_token(self, expires_in=3600):
+        now = datetime.now(timezone.utc)
+        if self.token and self.token_expiration.replace(
+                tzinfo=timezone.utc) > now + timedelta(seconds=60):
+            return self.token
+        self.token = secrets.token_hex(16)
+        self.token_expiration = now + timedelta(seconds=expires_in)
+        self.save()
+        return self.token
+
+    def revoke_token(self):
+        self.token_expiration = datetime.now(timezone.utc) - timedelta(
+            seconds=1)
+        self.save()
+        
+    @staticmethod
+    def check_token(token):
+        user = User.get_filtered_by(token=token)
+        if user is None or user.token_expiration.replace(
+                tzinfo=timezone.utc) < datetime.now(timezone.utc):
+            return None
+        return user
 
     def get_id(self):
         return self.email
