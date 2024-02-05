@@ -15,9 +15,6 @@ def verify_password(email, password):
     user = User.get_filtered_by(email=email)
     current_app.logger.debug("credentials: " + email)
     current_app.logger.debug("auth user: " + ("None" if user is None else str(user.to_dict())))
-    current_app.logger.debug("----------------")
-    current_app.logger.debug(user.password)
-    current_app.logger.debug("----------------")
     if user and check_password_hash(user._User__password, password):
         return user
 
