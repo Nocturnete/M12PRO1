@@ -46,7 +46,7 @@ class BaseMixin():
     @classmethod
     def get_id(cls, id):
         return db.session.query(cls).get(id)
-
+    
     @classmethod
     def get_all(cls):
         return db.session.query(cls).all()
@@ -54,6 +54,10 @@ class BaseMixin():
     @classmethod
     def get_filtered_by(cls, **kwargs):
         return db.session.query(cls).filter_by(**kwargs).one_or_none()
+    
+    @classmethod
+    def get_filtered_by_confirmed(cls, order):
+        return db.session.query(cls).filter_by(order_id=order.id).first()
     
     @classmethod
     def get_all_filtered_by(cls, **kwargs):

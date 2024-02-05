@@ -79,7 +79,6 @@ class User(db.Model, BaseMixin, UserMixin, SerializableMixin):
 
     def is_action_allowed_to_product(self, action, product = None):
         from .helper_role import _permissions, Action
-
         current_permissions = _permissions[self.role]
         if not current_permissions:
             return False
