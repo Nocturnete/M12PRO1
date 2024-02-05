@@ -20,6 +20,7 @@ def create_order():
         current_app.logger.error(e)
         return bad_request(str(e))
     
+    
 @api_bp.route('/orders/<order_id>', methods=['PUT'])
 @token_auth.login_required
 def update_order(order_id):
@@ -46,6 +47,7 @@ def update_order(order_id):
         current_app.logger.debug(e)
         return bad_request(str(e))
     
+
 @api_bp.route('/orders/<order_id>', methods=['DELETE'])
 @token_auth.login_required
 def delete_order(order_id):
