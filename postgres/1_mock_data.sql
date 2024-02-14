@@ -6,7 +6,7 @@ INSERT INTO statuses (name, slug) VALUES ('Disponible', 'disponible');
 INSERT INTO statuses (name, slug) VALUES ('Agotado', 'agotado');
 
 INSERT INTO users (name, email, role, password, verified, created, updated) 
-VALUES ('Juan Pérez', 'juan@example.com', 'admin', 'hashed_password', 1, NOW(), NOW());
+VALUES ('cristian martinez', 'crmagu@fp.insjoaquimmir.cat', 'wanner', 'insjoaquimmir', 1, NOW(), NOW());
 
 INSERT INTO users (name, email, role, password, verified, created, updated) 
 VALUES ('María López', 'maria@example.com', 'editor', 'hashed_password', 1, NOW(), NOW());
