@@ -10,8 +10,8 @@ class Config:
     SESSION_COOKIE_NAME = environ.get('SESSION_COOKIE_NAME')
 
     DEBUG_TB_INTERCEPT_REDIRECTS = False
-
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + path.join(basedir, environ.get('SQLITE_FILE_RELATIVE_PATH'))
+    SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URL', 'mysql+pymysql://2dd02:oE90kekuRj+ll0P8@37.27.3.70:3306/2dd02_my')
+    # SQLALCHEMY_DATABASE_URI = "sqlite:///" + path.join(basedir, environ.get('SQLITE_FILE_RELATIVE_PATH'))
     SQLALCHEMY_ECHO = environ.get('SQLALCHEMY_ECHO')
 
     MAIL_SUBJECT_PREFIX = environ.get('MAIL_SUBJECT_PREFIX')
