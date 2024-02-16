@@ -9,12 +9,12 @@ class Config:
     SECRET_KEY = environ.get('SECRET_KEY')
     SESSION_COOKIE_NAME = environ.get('SESSION_COOKIE_NAME')
 
-    SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE')
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 
     # PARA CAMBIAR ENTRE BASES DE DATOS SOLAMENTE TIENES QUE CAMBIAR EL SEGUNDO PARAMETRO
-    DB_From = environ.get('DB_From', 'MySQL')  
+    DB_From = environ.get('DB_From', 'PostgreSQL')  
 
     if DB_From == "MySQL":
         SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI_MYSQL')

@@ -1,3 +1,15 @@
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    slug TEXT NOT NULL
+);
+
+CREATE TABLE statuses (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    slug TEXT NOT NULL
+);
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
@@ -26,18 +38,6 @@ CREATE TABLE products (
     FOREIGN KEY (category_id) REFERENCES categories(id),
     FOREIGN KEY (status_id) REFERENCES statuses(id),
     FOREIGN KEY (seller_id) REFERENCES users(id)
-);
-
-CREATE TABLE categories (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    slug TEXT NOT NULL
-);
-
-CREATE TABLE statuses (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    slug TEXT NOT NULL
 );
 
 CREATE TABLE blocked_users (
