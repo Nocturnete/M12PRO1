@@ -12,8 +12,19 @@ class Config:
     SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
-    if (SQLALCHEMY_DATABASE_URI is None or SQLALCHEMY_DATABASE_URI == ""):
+
+    # PARA CAMBIAR ENTRE BASES DE DATOS SOLAMENTE TIENES QUE CAMBIAR EL SEGUNDO PARAMETRO
+    DB_From = environ.get('DB_From', 'MySQL')  
+
+    if DB_From == "MySQL":
+        SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI_MYSQL')
+    elif DB_From == "SQLite":
         SQLALCHEMY_DATABASE_URI = "sqlite:///" + path.join(basedir, environ.get('SQLITE_FILE_RELATIVE_PATH'))
+    elif DB_From == "PostgreSQL":
+        SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI_POSTGRESQL')
+    else:
+        raise ValueError("Valor no válido para DB_From. Debe ser 'MySQL', 'SQLite' o 'PostgreSQL'.")
+
 
     MAIL_SUBJECT_PREFIX = environ.get('MAIL_SUBJECT_PREFIX')
     MAIL_SENDER_NAME = environ.get('MAIL_SENDER_NAME')
