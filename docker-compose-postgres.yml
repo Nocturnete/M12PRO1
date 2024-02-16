@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+
+  postgres:
+    image: postgres:16.1
+    restart: always
+    environment:
+      POSTGRES_USER: 2dd02
+      POSTGRES_PASSWORD: 2dd02
+      POSTGRES_DB: 2dd02_pg
+      PDDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./postgres:/docker-entrypoint-initdb.d
+      - postgres_volume:/var/lib/postgresql/data
+    ports:
+      - 127.0.0.1:5432:5432
+
+volumes:
+  postgres_volume:
