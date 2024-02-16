@@ -1,0 +1,475 @@
+{
+	"info": {
+		"_postman_id": "46ac0e98-251f-4d52-8325-14695ec4d702",
+		"name": "Wannapop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32451919",
+		"_collection_link": "https://speeding-moon-42830.postman.co/workspace/Wannapop~870681fe-d72a-4393-b1c5-9430ab4c1576/collection/32451919-46ac0e98-251f-4d52-8325-14695ec4d702?action=share&source=collection_link&creator=32451919"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "GET List Users by name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/users",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Show User by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/users/7",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"users",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET List of Products by user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/users/7/products",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"users",
+								"7",
+								"products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Create Orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "a4caa0505ff7840e839c402900b5ced3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product_id\": 17,\n  \"offer\": 33\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/orders",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "a4caa0505ff7840e839c402900b5ced3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"offer\": 5434\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}//orders/33",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"",
+								"orders",
+								"33"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "d06f52d661852ea8786184f69990ef78",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/orders/33",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"orders",
+								"33"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Statuses",
+			"item": [
+				{
+					"name": "GET List Statuses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/statuses",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"statuses"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "List Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/products",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/products/3",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"products",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "3af2ace6d1bbd4dd58384226dd54d50b",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Modificadovich\",\n    \"description\": \"Muak.\",\n    \"photo\": \"no_image.png\",\n    \"price\": \"9.99\",\n    \"category_id\": 1,\n    \"status_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/products/14",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"products",
+								"14"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/products/3/orders",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"products",
+								"3",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "List Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/categories",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Confirmed Orders",
+			"item": [
+				{
+					"name": "Create Confirmed Orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "5bbc31c4e400108435063baebf551898",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/orders/1/confirmed",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"orders",
+								"1",
+								"confirmed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Confirmed Orders",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "5bbc31c4e400108435063baebf551898",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/orders/1/confirmed",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"orders",
+								"1",
+								"confirmed"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth token",
+			"item": [
+				{
+					"name": "Create token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{USER}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{PASSWORD}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/{{API_VERSION}}/tokens",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"{{API_VERSION}}",
+								"tokens"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
