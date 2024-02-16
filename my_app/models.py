@@ -154,7 +154,7 @@ class Order(db.Model, BaseMixin, SerializableMixin):
         db.UniqueConstraint("product_id", "buyer_id", name="uc_product_buyer"),
     )
 
-class ConfirmedOrder(db.Model, BaseMixin):
+class ConfirmedOrder(db.Model, BaseMixin, SerializableMixin):
     __tablename__ = "confirmed_orders"
     order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), primary_key=True)
     created = db.Column(db.DateTime, server_default=func.now())

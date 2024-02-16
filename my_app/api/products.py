@@ -1,9 +1,9 @@
 from . import api_bp
 from .errors import not_found, bad_request
-from .. import db_manager as db
-from ..models import Product, Category, Order
+from ..models import Product, Category, Order, User
 from ..helper_json import json_request, json_response
 from flask import current_app, request
+from .helper_auth import token_auth
 
 # List
 @api_bp.route('/products', methods=['GET'])
@@ -35,21 +35,27 @@ def get_product(id):
     
 # Update
 @api_bp.route('/products/<int:id>', methods=['PUT'])
+@token_auth.login_required
 def update_product(id):
     product = Product.get(id)
-    if product:
-        try:
-            data = json_request(['title', 'description', 'photo', 'price', 'category_id', 'status_id'], False)
-        except Exception as e:
-            current_app.logger.debug(e)
-            return bad_request(str(e))
+    user = User.get_one_filtered(id=product.seller_id)
+    user_current = token_auth.current_user().id
+    if user.id == user_current:
+        if product:
+            try:
+                data = json_request(['title', 'description', 'photo', 'price', 'category_id', 'status_id'], False)
+            except Exception as e:
+                current_app.logger.debug(e)
+                return bad_request(str(e))
+            else:
+                product.update(**data)
+                current_app.logger.debug("UPDATED product: {}".format(product.to_dict()))
+                return json_response(product.to_dict())
         else:
-            product.update(**data)
-            current_app.logger.debug("UPDATED product: {}".format(product.to_dict()))
-            return json_response(product.to_dict())
+            current_app.logger.debug("Product {} not found".format(id))
+            return not_found("Product not found")
     else:
-        current_app.logger.debug("Product {} not found".format(id))
-        return not_found("Product not found")
+        return not_found("Permission denied")
 
 # List
 @api_bp.route('/products/<int:id>/orders', methods=['GET'])
